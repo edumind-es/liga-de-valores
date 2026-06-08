@@ -1,0 +1,71 @@
+{
+  "name": "Liga EDUmind",
+  "short_name": "Liga",
+  "description": "Gestión de ligas deportivas educativas con soporte offline",
+  "start_url": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "background_color": "#0b1425",
+  "theme_color": "#3ddad7",
+  "orientation": "any",
+  "lang": "es",
+  "dir": "ltr",
+  "scope": "/",
+  "id": "liga-edumind-pwa",
+  "categories": ["education", "sports"],
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Mis Ligas",
+      "short_name": "Ligas",
+      "description": "Ver y gestionar mis ligas",
+      "url": "/ligas",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Marcador Express",
+      "short_name": "Express",
+      "description": "Marcador rápido sin cuenta",
+      "url": "/express",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Acceso por PIN",
+      "short_name": "PIN",
+      "description": "Accede a tu partido con PIN",
+      "url": "/partido",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}

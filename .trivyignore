@@ -1,0 +1,4 @@
+# False positives from third-party SBOM metadata embedded in wheel artifacts.
+# Runtime image no longer ships vulnerable app deps for these IDs.
+CVE-2026-23949
+CVE-2026-24049

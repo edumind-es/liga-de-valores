@@ -1,0 +1,244 @@
+name: Liga EDUmind CI/CD
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      publish_public:
+        description: "Publicar versión pública (solo tras verificación manual)"
+        type: boolean
+        required: true
+        default: false
+      release_stage:
+        description: "Stage de release pública"
+        type: choice
+        required: false
+        default: "Stable"
+        options:
+          - RC
+          - Stable
+
+permissions:
+  contents: read
+
+jobs:
+  versioning:
+    runs-on: ubuntu-latest
+    outputs:
+      base_version: ${{ steps.version.outputs.base_version }}
+      bump: ${{ steps.version.outputs.bump }}
+      public_version: ${{ steps.version.outputs.public_version }}
+      private_version: ${{ steps.version.outputs.private_version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Calculate SemVer and private version
+        id: version
+        run: |
+          BASE_VERSION="$(python3 -c "import json; print(json.load(open('frontend/package.json'))['version'])")"
+          LAST_TAG="$(git describe --tags --match 'v[0-9]*' --abbrev=0 2>/dev/null || true)"
+          if [[ -n "${LAST_TAG}" ]]; then
+            FROM_REF="${LAST_TAG}"
+          else
+            FROM_REF="$(git rev-list --max-parents=0 HEAD | tail -n 1)"
+          fi
+
+          BUMP="$(bash scripts/versioning/detect-conventional-bump.sh "${FROM_REF}" "${GITHUB_SHA}")"
+          PUBLIC_VERSION="$(bash scripts/versioning/semver-bump.sh "${BASE_VERSION}" "${BUMP}")"
+          PRIVATE_VERSION="$(bash scripts/versioning/private-version.sh "${PUBLIC_VERSION}" "${GITHUB_SHA}" "${GITHUB_RUN_NUMBER}")"
+
+          echo "base_version=${BASE_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "bump=${BUMP}" >> "$GITHUB_OUTPUT"
+          echo "public_version=${PUBLIC_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "private_version=${PRIVATE_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Version summary
+        run: |
+          {
+            echo "### Versionado automático"
+            echo "- Base actual: \`${{ steps.version.outputs.base_version }}\`"
+            echo "- Bump detectado: \`${{ steps.version.outputs.bump }}\`"
+            echo "- Próxima pública candidata: \`${{ steps.version.outputs.public_version }}\`"
+            echo "- Build privada CI: \`${{ steps.version.outputs.private_version }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  test-backend:
+    needs: versioning
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: |
+          cd backend
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Backend sanity checks
+        run: |
+          cd backend
+          python -m py_compile app/main.py app/api/v1/auth.py app/utils/security.py
+          echo "Backend sanity checks passed"
+
+  migration-safety:
+    needs: versioning
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Validate Alembic migration safety
+        run: |
+          cd backend
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python scripts/check_safe_migrations.py
+          HEADS="$(alembic heads)"
+          echo "${HEADS}"
+          COUNT="$(echo "${HEADS}" | grep -c '(head)' || true)"
+          test "${COUNT}" -eq 1
+
+  security-backend:
+    needs: versioning
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install security scanners
+        run: |
+          cd backend
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pip-audit bandit
+      - name: pip-audit (fail on unresolved vulns)
+        run: |
+          cd backend
+          timeout 300 pip-audit -r requirements.txt --progress-spinner off --ignore-vuln CVE-2024-23342
+      - name: Bandit (high severity/high confidence)
+        run: |
+          cd backend
+          bandit -q -r app -x app/tests -lll -iii
+
+  security-container:
+    needs: versioning
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build backend image for scan
+        run: |
+          docker buildx build --load \
+            -f docker/backend/Dockerfile \
+            -t liga-edumind-backend:ci-scan \
+            ./backend
+      - name: Trivy scan (HIGH/CRITICAL)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: liga-edumind-backend:ci-scan
+          format: table
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: os,library
+          severity: HIGH,CRITICAL
+          scanners: vuln
+          trivyignores: .trivyignore
+
+  build-private-frontend:
+    needs: [versioning, test-backend, migration-safety, security-backend, security-container]
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.publish_public != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - name: Build frontend (private version)
+        run: |
+          cd frontend
+          npm ci
+          APP_VERSION="${{ needs.versioning.outputs.private_version }}" APP_STAGE="Beta" npm run build
+      - name: Upload private frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist-private-${{ needs.versioning.outputs.private_version }}
+          path: frontend/dist
+          if-no-files-found: error
+      - name: Private build summary
+        run: |
+          {
+            echo "### Build privada"
+            echo "- Versión privada generada: \`${{ needs.versioning.outputs.private_version }}\`"
+            echo "- Política: no se publica en GitHub/DockerHub automáticamente."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  build-public-frontend:
+    needs: [versioning, test-backend, migration-safety, security-backend, security-container]
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.publish_public == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - name: Build frontend (public version)
+        run: |
+          cd frontend
+          npm ci
+          APP_VERSION="${{ needs.versioning.outputs.public_version }}" APP_STAGE="${{ github.event.inputs.release_stage }}" npm run build
+      - name: Upload public frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist-public-${{ needs.versioning.outputs.public_version }}
+          path: frontend/dist
+          if-no-files-found: error
+
+  publish-public-backend-image:
+    needs: [versioning, test-backend, migration-safety, security-backend, security-container]
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.publish_public == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push backend (public/manual)
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          file: ./docker/backend/Dockerfile
+          push: true
+          tags: |
+            user/liga-edumind-backend:v${{ needs.versioning.outputs.public_version }}
+      - name: Public release summary
+        run: |
+          {
+            echo "### Publicación manual"
+            echo "- Versión pública: \`${{ needs.versioning.outputs.public_version }}\`"
+            echo "- Stage: \`${{ github.event.inputs.release_stage }}\`"
+            echo "- Ejecutada manualmente tras validación."
+          } >> "$GITHUB_STEP_SUMMARY"

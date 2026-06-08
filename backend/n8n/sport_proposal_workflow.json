@@ -1,0 +1,179 @@
+{
+    "name": "EDUmind Sport Proposal (Async)",
+    "active": false,
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "sport-proposal",
+                "responseMode": "onReceived",
+                "options": {}
+            },
+            "id": "webhook-node",
+            "name": "Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                460,
+                340
+            ],
+            "webhookId": "sport-proposal"
+        },
+        {
+            "parameters": {
+                "operation": "insert",
+                "schema": {
+                    "__rl": true,
+                    "value": "public",
+                    "mode": "list",
+                    "cachedResultName": "public"
+                },
+                "table": {
+                    "__rl": true,
+                    "value": "sport_proposals",
+                    "mode": "list",
+                    "cachedResultName": "sport_proposals"
+                },
+                "columns": {
+                    "mappingMode": "defineBelow",
+                    "value": {
+                        "nombre": "={{ $json.nombre }}",
+                        "tipo_marcador": "={{ $json.tipo_marcador }}",
+                        "descripcion": "={{ $json.descripcion }}",
+                        "web_url": "={{ $json.web }}",
+                        "email_contacto": "={{ $json.email }}"
+                    },
+                    "matchingColumns": [],
+                    "schema": [
+                        {
+                            "id": "nombre",
+                            "displayName": "nombre",
+                            "required": false,
+                            "defaultMatch": false,
+                            "display": true,
+                            "type": "string",
+                            "canBeUsedToMatch": true,
+                            "removed": false
+                        },
+                        {
+                            "id": "tipo_marcador",
+                            "displayName": "tipo_marcador",
+                            "required": false,
+                            "defaultMatch": false,
+                            "display": true,
+                            "type": "string",
+                            "canBeUsedToMatch": true,
+                            "removed": false
+                        },
+                        {
+                            "id": "descripcion",
+                            "displayName": "descripcion",
+                            "required": false,
+                            "defaultMatch": false,
+                            "display": true,
+                            "type": "string",
+                            "canBeUsedToMatch": true,
+                            "removed": false
+                        },
+                        {
+                            "id": "web_url",
+                            "displayName": "web_url",
+                            "required": false,
+                            "defaultMatch": false,
+                            "display": true,
+                            "type": "string",
+                            "canBeUsedToMatch": true,
+                            "removed": false
+                        },
+                        {
+                            "id": "email_contacto",
+                            "displayName": "email_contacto",
+                            "required": false,
+                            "defaultMatch": false,
+                            "display": true,
+                            "type": "string",
+                            "canBeUsedToMatch": true,
+                            "removed": false
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "postgres-insert",
+            "name": "Insert Sport Proposal",
+            "type": "n8n-nodes-base.postgres",
+            "typeVersion": 2.1,
+            "position": [
+                680,
+                340
+            ],
+            "credentials": {
+                "postgres": {
+                    "id": "POSTGRES_CREDENTIAL_ID_PLACEHOLDER",
+                    "name": "Postgres Local"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "YOUR_DISCORD_WEBHOOK_URL",
+                "authentication": "none",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "content",
+                            "value": "🚀 **Nueva Propuesta de Deporte**\n\n**Deporte:** {{ $json.nombre }}\n**Marcador:** {{ $json.tipo_marcador }}\n**Descripción:** {{ $json.descripcion }}\n**Web:** {{ $json.web_url }}\n**Contacto:** {{ $json.email_contacto }}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "discord-node",
+            "name": "Discord Notification",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.1,
+            "position": [
+                900,
+                340
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "Insert Sport Proposal",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Insert Sport Proposal": {
+            "main": [
+                [
+                    {
+                        "node": "Discord Notification",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {},
+    "staticData": null,
+    "pinData": {}
+}

@@ -1,0 +1,335 @@
+/*
+ * Copyright (C) 2024-2025 EDUmind - Los Mundos Edufis
+ * Author: Luis Vilela Acuña
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+.edumind-footer {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.95rem;
+    padding: 1.05rem 1.25rem 1.25rem;
+    margin-top: auto;
+    border-top: 1px solid var(--lme-border);
+    background: color-mix(in srgb, #0f1b34 82%, #091122 18%);
+    color: var(--lme-muted);
+    font-family: var(--font-body, 'Space Grotesk', system-ui, sans-serif);
+    font-size: 0.88rem;
+}
+
+.edumind-footer--compact {
+    gap: 0.62rem;
+    padding: 0.82rem 1rem 0.98rem;
+    font-size: 0.82rem;
+}
+
+.edumind-footer--compact .footer-main {
+    gap: 0.4rem;
+}
+
+.edumind-footer--compact .footer-version-inline {
+    font-size: 0.72rem;
+}
+
+.app-shell--public .edumind-footer {
+    border-top-color: var(--editorial-border);
+    background: color-mix(in srgb, var(--editorial-paper) 92%, white 8%);
+    color: var(--editorial-muted);
+}
+
+.footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-btn {
+    text-decoration: none;
+    color: var(--lme-text);
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid var(--lme-border);
+    background: rgba(255, 255, 255, 0.03);
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.nav-btn:hover {
+    color: var(--lme-text);
+    border-color: #8aaae1;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.app-shell--public .nav-btn {
+    color: var(--editorial-ink);
+    border-color: #b5c8e8;
+    background: #e8f1ff;
+}
+
+.app-shell--public .nav-btn:hover {
+    border-color: #7f9fd4;
+    background: #dbe9ff;
+}
+
+.footer-main {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.85fr) minmax(0, 2fr);
+    gap: 0.7rem 1.15rem;
+}
+
+.footer-info {
+    display: grid;
+    gap: 0.22rem;
+    align-content: start;
+    font-size: 0.84rem;
+}
+
+.footer-app,
+.footer-copyright {
+    margin: 0;
+}
+
+.footer-app {
+    font-size: 0.9rem;
+    letter-spacing: 0.01em;
+}
+
+.footer-copyright {
+    color: var(--lme-muted);
+}
+
+.footer-info strong {
+    color: var(--lme-text);
+}
+
+.app-shell--public .footer-info strong {
+    color: var(--editorial-ink);
+}
+
+.footer-version-inline {
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    font-size: 0.73rem;
+    color: color-mix(in srgb, var(--lme-text) 82%, var(--lme-muted) 18%);
+}
+
+.footer-version-inline__label {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    color: color-mix(in srgb, var(--lme-muted) 72%, white 24%);
+}
+
+.footer-version-inline__value {
+    font-family: inherit;
+    font-weight: 600;
+    color: var(--lme-text);
+    overflow-wrap: anywhere;
+}
+
+.app-shell--public .footer-version-inline {
+    color: #3a5a85;
+}
+
+.app-shell--public .footer-version-inline__label {
+    color: #456694;
+}
+
+.app-shell--public .footer-version-inline__value {
+    color: #19395f;
+}
+
+.footer-links-group {
+    display: grid;
+    gap: 0.34rem;
+}
+
+.footer-legal,
+.footer-social {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.34rem 0.42rem;
+    font-size: 0.82rem;
+    line-height: 1.35;
+}
+
+.edumind-footer--compact .footer-legal,
+.edumind-footer--compact .footer-social {
+    font-size: 0.78rem;
+}
+
+.footer-legal a,
+.footer-social a {
+    text-decoration: none;
+    color: inherit;
+    border-radius: 0.4rem;
+    padding: 0.14rem 0.26rem;
+    border: 1px solid transparent;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.footer-legal a:hover,
+.footer-social a:hover {
+    color: var(--lme-text);
+    border-color: color-mix(in srgb, var(--lme-border) 72%, white 8%);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.footer-legal a:focus-visible,
+.footer-social a:focus-visible {
+    border-color: color-mix(in srgb, var(--lme-primary) 55%, white 10%);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.app-shell--public .footer-legal a:hover,
+.app-shell--public .footer-social a:hover {
+    color: var(--editorial-ink);
+    border-color: #9eb7df;
+    background: rgba(44, 90, 160, 0.1);
+}
+
+.footer-support {
+    color: #4aa86a;
+    font-weight: 600;
+}
+
+.footer-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.edumind-footer--compact .footer-meta {
+    gap: 0.5rem;
+}
+
+.version-badge {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(82, 217, 199, 0.24), rgba(74, 132, 255, 0.3));
+    border: 1px solid color-mix(in srgb, var(--lme-border) 60%, #d6e6ff 40%);
+    color: var(--lme-text);
+    padding: 0.24rem 0.58rem;
+    border-radius: 0.45rem;
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    font-family: inherit;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+.app-shell--public .version-badge {
+    background: #e4edfb;
+    border-color: #89a9d8;
+    color: #173760;
+}
+
+.feedback-link {
+    text-decoration: none;
+    color: var(--lme-text);
+    border: 1px solid var(--lme-border);
+    border-radius: 0.6rem;
+    padding: 0.32rem 0.62rem;
+    font-size: 0.84rem;
+    font-weight: 600;
+}
+
+.feedback-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #8aaae1;
+}
+
+.feedback-link:focus-visible {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.app-shell--public .feedback-link {
+    color: #264777;
+    border-color: #abc3e8;
+    background: #e8f0ff;
+}
+
+.app-shell--public .feedback-link:hover {
+    border-color: #7f9fd4;
+    background: #dae8ff;
+}
+
+@media (max-width: 820px) {
+    .edumind-footer {
+        padding: 1rem;
+    }
+
+    .footer-main {
+        grid-template-columns: 1fr;
+        gap: 0.55rem;
+    }
+
+    .footer-nav {
+        gap: 0.4rem;
+    }
+
+    .footer-meta {
+        justify-content: flex-start;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .nav-btn,
+    .footer-legal a,
+    .footer-social a,
+    .feedback-link {
+        transition: none;
+    }
+}
+
+.reduce-motion .nav-btn,
+.reduce-motion .footer-legal a,
+.reduce-motion .footer-social a,
+.reduce-motion .feedback-link {
+    transition: none !important;
+}
+
+.high-contrast .edumind-footer {
+    background: #0a0a0a;
+    border-top-color: #fff;
+    color: #f5f5f5;
+}
+
+.high-contrast .footer-legal a,
+.high-contrast .footer-social a {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.high-contrast .nav-btn,
+.high-contrast .feedback-link,
+.high-contrast .version-badge {
+    border-width: 2px;
+    border-color: #fff;
+    color: #fff;
+}
+
+.high-contrast .footer-version-inline__label,
+.high-contrast .footer-version-inline__value {
+    color: #fff;
+}

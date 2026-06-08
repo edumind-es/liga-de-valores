@@ -1,0 +1,100 @@
+# Liga EDUmind - Production Docker Compose
+# Enterprise Grade Configuration - 2026
+
+services:
+  # ==========================================
+  # Database Layer (PostgreSQL)
+  # ==========================================
+  db:
+    image: postgres:15-alpine@sha256:aa7b1ef595e165f0b780162e3a41edd0a7ed3ea672eb8a0f81615ba725e62bc5
+    container_name: liga-edumind-db-prod
+    env_file:
+      - /var/www/.secrets/liga_edumind.env
+    environment:
+      - POSTGRES_DB=liga_edumind
+      - POSTGRES_USER=liga_edumind
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    networks:
+      - liga_net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U liga_edumind -d liga_edumind" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always # Robust restart policy
+    ports:
+      - "127.0.0.1:5433:5432"
+    # Security: Protected by UFW (Deny all external, allow Docker)
+
+    # ==========================================
+    # Cache Layer (Redis)
+    # ==========================================
+  redis:
+    image: redis:7.4.6-alpine@sha256:3b73847e72874be07e6657b129a94761662b79bc0f679273757d4218573b2a98
+    container_name: liga-edumind-redis-prod
+    volumes:
+      - redis_data_prod:/data
+    networks:
+      - liga_net
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: always
+
+  # ==========================================
+  # Application Layer (FastAPI)
+  # ==========================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../docker/backend/Dockerfile
+    container_name: liga-edumind-backend-prod
+    env_file:
+      - /var/www/.secrets/liga_edumind.env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - RATE_LIMIT_STORAGE_URL=redis://redis:6379/1
+      - AUTHENTIK_CLIENT_SECRET_FILE=/run/secrets/liga_edumind_authentik_client_secret
+      - DEBUG=False
+      - ENVIRONMENT=production
+      - MAX_REQUEST_SIZE_MB=8
+      - METRICS_ALLOWED_IPS=127.0.0.1,::1,192.168.0.1
+    volumes:
+      - ./backend/static/uploads:/app/static/uploads
+      - /var/www/.secrets/liga_edumind_authentik_client_secret:/run/secrets/liga_edumind_authentik_client_secret:ro
+      - logs_data:/app/logs
+    networks:
+      - liga_net
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/api/ready', timeout=3).read()\""]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    restart: always
+    ports:
+      - "127.0.0.1:8001:8001" # Exposed only to localhost for Nginx proxy
+    # Production Command: multiple workers, no reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8001 --workers 4 --log-config /app/logging.conf
+
+networks:
+  liga_net:
+    driver: bridge
+
+volumes:
+  postgres_data_prod:
+    external: true
+    name: liga_edumind_postgres_data
+  redis_data_prod:
+    # Redis data is less critical, but we can reuse if it exists or keep new
+    name: liga_edumind_redis_data_prod
+
+  logs_data:

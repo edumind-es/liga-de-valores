@@ -1,0 +1,9 @@
+# Liga EDUmind - Daily Database Backup
+# Runs at 04:00 AM every day
+# Created: 2026-02-04
+
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# Daily backup at 04:00 AM
+0 4 * * * root /var/www/liga_edumind/scripts/backup-db.sh 2>&1
