@@ -1,5 +1,5 @@
-fastapi==0.120.4
-starlette==0.49.1
+fastapi==0.139.2
+starlette==1.3.1
 uvicorn[standard]==0.35.0
 gunicorn==23.0.0       # gestor de workers en producción (graceful restart)
 sqlalchemy[asyncio]==2.0.25
@@ -8,8 +8,8 @@ asyncpg==0.29.0
 python-jose[cryptography]==3.5.0
 passlib[bcrypt,argon2]==1.7.4
 argon2-cffi==23.1.0
-python-multipart==0.0.22
-python-dotenv==1.0.1
+python-multipart==0.0.32
+python-dotenv==1.2.2
 redis==5.0.1
 pydantic[email]==2.10.6
 pydantic-settings==2.7.1
@@ -17,15 +17,15 @@ email-validator==2.2.0
 qrcode[pil]==7.4.2
 reportlab==4.0.9
 openpyxl==3.1.2
-pillow==12.1.1
+pillow==12.3.0
 faker==22.0.0
 arq==0.26.3            # cola de trabajos sobre Redis (emails en background)
-aiosmtplib==3.0.2      # SMTP asíncrono (no bloquea el event loop)
+aiosmtplib==5.1.2      # SMTP asíncrono (no bloquea el event loop)
 
 # Development dependencies
-pytest==8.3.5
-pytest-asyncio==0.25.3
-pytest-cov==6.0.0      # cobertura de la suite en CI
+pytest==9.1.1
+pytest-asyncio==1.3.0
+pytest-cov==7.0.0      # cobertura de la suite en CI
 aiosqlite==0.20.0      # BD SQLite en memoria para los tests (conftest.py)
 httpx==0.28.1
 slowapi==0.1.9
