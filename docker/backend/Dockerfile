@@ -2,8 +2,13 @@ FROM python:3.11.15-slim
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+# Dependencias del sistema. El `upgrade` no es opcional: sin él los paquetes
+# del sistema se quedan en la versión que traía la imagen base aunque Debian
+# ya haya publicado el parche, y el escaneo de Trivy falla con CVEs que sí
+# tienen corrección disponible.
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y --no-install-recommends \
     gcc \
     postgresql-client \
     gosu \
@@ -13,9 +18,13 @@ RUN apt-get update && apt-get install -y \
 RUN groupadd -g 1000 appgroup \
     && useradd -u 10001 -g appgroup -m -s /usr/sbin/nologin appuser
 
-# Copy requirements and install Python dependencies
+# Copy requirements and install Python dependencies.
+# Se actualizan antes pip, setuptools y wheel: la imagen base trae versiones
+# con CVEs propios (jaraco.context vendorizado en setuptools, y wheel), que
+# antes se silenciaban en .trivyignore en vez de corregirse.
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY . .
