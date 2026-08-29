@@ -1,0 +1,41 @@
+# Sin este fichero, COPY . . arrastraba a la imagen de producción el .env con
+# los secretos, las copias de seguridad y un virtualenv muerto de Python 3.10
+# (255 MB) que aportaba 39 CVEs HIGH/CRITICAL al escaneo sin ejecutarse nunca.
+
+# Entornos virtuales
+venv/
+.venv/
+env/
+
+# Secretos: la configuración llega por env_file de docker compose
+.env
+.env.*
+!.env.example
+
+# Copias de seguridad y datos
+backups/
+logs/
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+*.sql.gz
+
+# Caché de Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+.coverage
+htmlcov/
+
+# Control de versiones y herramientas
+.git/
+.gitignore
+.claude/
+
+# Documentación y material que no interviene en ejecución
+docs/
+n8n/
