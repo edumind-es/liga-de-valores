@@ -1,7 +1,11 @@
+import logging
 import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List
 from datetime import datetime, timezone
+
+logger = logging.getLogger(__name__)
+
 
 def _load_secret_from_file(env_name: str) -> str | None:
     path = os.getenv(f"{env_name}_FILE")
@@ -10,7 +14,16 @@ def _load_secret_from_file(env_name: str) -> str | None:
     try:
         with open(path, "r", encoding="utf-8") as handle:
             return handle.read().strip()
-    except OSError:
+    except OSError as error:
+        # Se avisa y se sigue: sin esto, un secreto que existe pero que el
+        # usuario del contenedor no puede leer se confundía con un secreto no
+        # configurado, y el error que llegaba al usuario era "configuración
+        # incompleta". Pasó con AUTHENTIK_CLIENT_SECRET y costó localizarlo.
+        logger.warning(
+            "No se pudo leer el secreto %s desde %s: %s. "
+            "Comprueba que el usuario del proceso tenga permiso de lectura.",
+            env_name, path, error,
+        )
         return None
 
 class Settings(BaseSettings):
