@@ -1,4 +1,12 @@
-# False positives from third-party SBOM metadata embedded in wheel artifacts.
-# Runtime image no longer ships vulnerable app deps for these IDs.
-CVE-2026-23949
-CVE-2026-24049
+# Hallazgos que provienen del SBOM que pip incluye en pip/_vendor/bom.cdx.json,
+# no de las dependencias de la aplicación. Son librerías que pip vendoriza para
+# su propio uso; pip no se ejecuta en el contenedor en runtime y estas copias no
+# están en el import path de la app. No se pueden corregir actualizando: pip
+# 26.2.1 (la última) las sigue vendorizando con esas versiones.
+#
+# La corrección de fondo sería una construcción multietapa que deje pip fuera de
+# la imagen final. Mientras tanto, se silencian de forma explícita.
+#
+# Revisar en cada subida de la imagen base o de pip: si desaparecen, quitar de aquí.
+GHSA-6v7p-g79w-8964   # msgpack 1.1.2 vendorizado en pip
+CVE-2025-47273        # setuptools 70.3.0 declarado en el SBOM de pip
