@@ -21,3 +21,20 @@ updates:
     groups:
       dependencias-menores:
         update-types: ["minor", "patch"]
+
+  # Los Dockerfile no estaban vigilados: las imágenes base envejecen igual que
+  # las dependencias y nadie avisaba.
+  - package-ecosystem: "docker"
+    directory: "/docker/backend"
+    schedule:
+      interval: "weekly"
+    groups:
+      dependencias-menores:
+        update-types: ["minor", "patch"]
+  - package-ecosystem: "docker"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+    groups:
+      dependencias-menores:
+        update-types: ["minor", "patch"]
