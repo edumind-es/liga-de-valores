@@ -14,11 +14,9 @@ redis==5.0.1
 pydantic[email]==2.13.4
 pydantic-settings==2.15.0
 email-validator==2.3.0
-qrcode[pil]==7.4.2
 reportlab==4.0.9
 openpyxl==3.1.5
 pillow==12.3.0
-faker==22.0.0
 arq==0.28.0            # cola de trabajos sobre Redis (emails en background)
 aiosmtplib==5.1.2      # SMTP asíncrono (no bloquea el event loop)
 
