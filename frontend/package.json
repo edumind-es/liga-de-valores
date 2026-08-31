@@ -2,7 +2,7 @@
   "name": "frontend",
   "private": true,
   "version": "3.0.0",
-  "author": "Luis Vilela Acuña <contacto@edumind.es>",
+  "author": "Luis Vilela Acu\u00f1a <contacto@edumind.es>",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -94,6 +94,7 @@
     "vitest": "^4.1.11"
   },
   "overrides": {
-    "minimatch": "^10.2.2"
+    "minimatch": "^10.2.2",
+    "uuid": "^11.1.1"
   }
 }
