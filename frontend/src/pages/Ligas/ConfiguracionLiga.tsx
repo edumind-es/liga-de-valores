@@ -235,12 +235,10 @@ export default function ConfiguracionLiga() {
     const handleExportStats = async (formato: 'csv' | 'pdf') => {
         setIsExportingStats(true);
         try {
-            await ligasApi.exportEstadisticas(
-                ligaId,
-                formato,
-                statsJornadaId ? parseInt(statsJornadaId) : undefined,
-                statsEquipoId ? parseInt(statsEquipoId) : undefined,
-            );
+            await ligasApi.exportEstadisticas(ligaId, formato, {
+                jornadaIds: statsJornadaId ? [parseInt(statsJornadaId)] : undefined,
+                equipoId: statsEquipoId ? parseInt(statsEquipoId) : undefined,
+            });
             toast.success(`Estadísticas descargadas (${formato.toUpperCase()})`);
         } catch {
             toast.error('No se pudo exportar las estadísticas');

@@ -18,8 +18,10 @@
 
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Plus, Calendar, Trash2, Wand2, Loader2, ChevronDown, ChevronUp, Trophy, Clock, Edit } from 'lucide-react';
+import { ArrowLeft, Plus, Calendar, Trash2, Wand2, Loader2, ChevronDown, ChevronUp, Trophy, Clock, Edit, Download } from 'lucide-react';
 import { useJornadas, useDeleteJornada, useGenerateCalendarioJornada } from '@/hooks/useJornadas';
+import { ligasApi } from '@/api/ligas';
+import { ExportarDatosDialog } from '@/components/export/ExportarDatosDialog';
 import { useLiga } from '@/hooks/useLigas';
 import { usePartidos } from '@/hooks/usePartidos';
 import { useTiposDeporte } from '@/hooks/useTiposDeporte';
@@ -49,6 +51,7 @@ export default function ListaJornadas() {
     const [isGenerateOpen, setIsGenerateOpen] = useState(false);
     const [selectedSport, setSelectedSport] = useState<string>('');
     const [expandedJornada, setExpandedJornada] = useState<number | null>(null);
+    const [isExportOpen, setIsExportOpen] = useState(false);
 
     const toggleJornada = (jornadaId: number) => {
         if (expandedJornada === jornadaId) {
@@ -127,6 +130,10 @@ export default function ListaJornadas() {
                 title="Calendario de Jornadas"
                 description={`Gestiona los partidos y jornadas de ${liga.nombre}`}
             >
+                <Button variant="outline" className="gap-2" onClick={() => setIsExportOpen(true)}>
+                    <Download className="h-5 w-5" />
+                    Exportar
+                </Button>
                 <Link to={`/ligas/${liga.id}/jornadas/crear`}>
                     <Button className="gap-2">
                         <Plus className="h-5 w-5" />
@@ -287,6 +294,25 @@ export default function ListaJornadas() {
                     </Card>
                 )}
             </div>
+
+            {/* Dialog de exportación de jornadas */}
+            <ExportarDatosDialog
+                open={isExportOpen}
+                onOpenChange={setIsExportOpen}
+                title="Exportar jornadas"
+                description="Descarga los datos completos de los partidos de las jornadas seleccionadas."
+                itemNoun="jornadas"
+                items={(jornadas ?? []).map((j) => ({
+                    id: j.id,
+                    label: j.nombre,
+                    sublabel: `${partidos?.filter((p) => p.jornada_id === j.id).length ?? 0} partidos`,
+                }))}
+                onExport={(formato, selectedIds) =>
+                    ligasApi.exportEstadisticas(liga.id, formato, {
+                        jornadaIds: selectedIds ?? undefined,
+                    })
+                }
+            />
 
             {/* Dialog para generar calendario de una jornada */}
             <Dialog open={isGenerateOpen} onOpenChange={setIsGenerateOpen}>

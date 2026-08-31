@@ -21,7 +21,7 @@ API endpoints for Ligas (Leagues).
 """
 from collections import defaultdict
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -806,13 +806,16 @@ async def export_clasificacion_pdf(
 async def export_estadisticas(
     liga_id: int,
     formato: str = "csv",
-    jornada_id: int = None,
+    jornada_id: List[int] = Query(default=None),
     equipo_id: int = None,
+    partido_id: List[int] = Query(default=None),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
     """
-    Exporta datos estadísticos de partidos (puntos, marcador, roles) por jornada o equipo.
+    Exporta datos estadísticos de partidos (puntos, marcador, roles).
+    Admite selección múltiple de jornadas o de partidos concretos
+    (parámetros repetibles: ?jornada_id=1&jornada_id=2).
     Diseñado para análisis matemático en clase (Excel/Sheets/PDF).
     """
     liga = await db.get(Liga, liga_id)
@@ -833,12 +836,14 @@ async def export_estadisticas(
         .order_by(Partido.jornada_id.asc().nullslast(), Partido.id.asc())
     )
     if jornada_id:
-        query = query.where(Partido.jornada_id == jornada_id)
+        query = query.where(Partido.jornada_id.in_(jornada_id))
     if equipo_id:
         from sqlalchemy import or_
         query = query.where(
             or_(Partido.equipo_local_id == equipo_id, Partido.equipo_visitante_id == equipo_id)
         )
+    if partido_id:
+        query = query.where(Partido.id.in_(partido_id))
 
     result = await db.execute(query)
     partidos = result.scalars().all()
