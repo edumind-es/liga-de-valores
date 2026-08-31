@@ -24,6 +24,7 @@ import {
     Calendar,
     Clock,
     Copy,
+    Download,
     FileSpreadsheet,
     FileText,
     Inbox,
@@ -40,7 +41,10 @@ import {
 import { apiClient } from '@/api/client';
 import { ligasApi } from '@/api/ligas';
 import { useLiga } from '@/hooks/useLigas';
+import { useJornadas } from '@/hooks/useJornadas';
+import { usePartidos } from '@/hooks/usePartidos';
 import { PageHeader } from '@/components/layout/PageHeader';
+import { ExportarDatosDialog } from '@/components/export/ExportarDatosDialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -73,6 +77,10 @@ export default function VerLiga() {
     const navigate = useNavigate();
     const ligaId = id ? parseInt(id, 10) : 0;
     const { data: liga, isLoading, error } = useLiga(ligaId);
+    const { data: jornadas } = useJornadas(ligaId);
+    const { data: partidos } = usePartidos(ligaId);
+    const [isExportJornadasOpen, setIsExportJornadasOpen] = useState(false);
+    const [isExportPartidosOpen, setIsExportPartidosOpen] = useState(false);
     const { isOnline } = useOfflineSync();
     const { user } = useAuthStore();
     const canPrepareOffline = isOnline;
@@ -531,8 +539,100 @@ export default function VerLiga() {
                         </div>
                     </div>
 
+                    {/* Sección exportación de datos */}
+                    <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                            <div className="h-px flex-1 bg-lme-border/25" />
+                            <p className="text-[0.6rem] font-medium uppercase tracking-[0.22em] text-sub/60">Exportación de datos</p>
+                            <div className="h-px flex-1 bg-lme-border/25" />
+                        </div>
+                        <div className="grid gap-4 md:grid-cols-3">
+                            <ActionTile
+                                title="Clasificación"
+                                description="Tabla completa con puntos deportivos y valores educativos por equipo."
+                                icon={FileSpreadsheet}
+                                tone="amber"
+                            >
+                                <div className="flex w-full gap-2">
+                                    <Button variant="outline" className="flex-1" onClick={handleExportCSV}>
+                                        <FileSpreadsheet className="h-4 w-4 mr-2" />
+                                        CSV
+                                    </Button>
+                                    <Button variant="outline" className="flex-1" onClick={handleExportPDF}>
+                                        <FileText className="h-4 w-4 mr-2" />
+                                        PDF
+                                    </Button>
+                                </div>
+                            </ActionTile>
+
+                            <ActionTile
+                                title="Jornadas"
+                                description={`Datos completos de los partidos por jornada (${liga.total_jornadas} disponibles). Elige todas o una a una.`}
+                                icon={Calendar}
+                                tone="vio"
+                            >
+                                <Button variant="outline" className="w-full" onClick={() => setIsExportJornadasOpen(true)}>
+                                    <Download className="h-4 w-4 mr-2" />
+                                    Seleccionar y exportar
+                                </Button>
+                            </ActionTile>
+
+                            <ActionTile
+                                title="Partidos"
+                                description={`Marcadores, resultados y puntos de cada partido (${liga.total_partidos} disponibles). Elige todos o uno a uno.`}
+                                icon={Trophy}
+                                tone="sky"
+                            >
+                                <Button variant="outline" className="w-full" onClick={() => setIsExportPartidosOpen(true)}>
+                                    <Download className="h-4 w-4 mr-2" />
+                                    Seleccionar y exportar
+                                </Button>
+                            </ActionTile>
+                        </div>
+                    </div>
+
                 </CardContent>
             </Card>
+
+            {/* Diálogos de exportación con selección múltiple */}
+            <ExportarDatosDialog
+                open={isExportJornadasOpen}
+                onOpenChange={setIsExportJornadasOpen}
+                title="Exportar jornadas"
+                description="Descarga los datos completos de los partidos de las jornadas seleccionadas."
+                itemNoun="jornadas"
+                items={(jornadas ?? []).map((j) => ({
+                    id: j.id,
+                    label: j.nombre,
+                    sublabel: `${partidos?.filter((p) => p.jornada_id === j.id).length ?? 0} partidos`,
+                }))}
+                onExport={(formato, selectedIds) =>
+                    ligasApi.exportEstadisticas(liga.id, formato, {
+                        jornadaIds: selectedIds ?? undefined,
+                    })
+                }
+            />
+            <ExportarDatosDialog
+                open={isExportPartidosOpen}
+                onOpenChange={setIsExportPartidosOpen}
+                title="Exportar partidos"
+                description="Descarga los datos completos de los partidos seleccionados."
+                itemNoun="partidos"
+                items={(partidos ?? []).map((partido) => ({
+                    id: partido.id,
+                    label: `${partido.equipo_local.nombre} vs ${partido.equipo_visitante.nombre}`,
+                    sublabel: [
+                        partido.tipo_deporte.nombre,
+                        partido.fecha_hora ? new Date(partido.fecha_hora).toLocaleDateString('es-ES') : null,
+                        partido.finalizado ? 'Finalizado' : 'Pendiente',
+                    ].filter(Boolean).join(' · '),
+                }))}
+                onExport={(formato, selectedIds) =>
+                    ligasApi.exportEstadisticas(liga.id, formato, {
+                        partidoIds: selectedIds ?? undefined,
+                    })
+                }
+            />
 
             <Card id="gestiones-pendientes-liga" className="border-lme-border/90 bg-[rgba(30,27,22,0.72)] shadow-[0_18px_38px_rgba(10,9,7,0.18)]">
                 <CardHeader className="border-b border-lme-border/70">
@@ -546,9 +646,9 @@ export default function VerLiga() {
                 </CardContent>
             </Card>
 
-            {/* Acciones secundarias: offline y exportaciones */}
+            {/* Acciones secundarias: modo offline */}
             <div className="space-y-2">
-                <div className="grid gap-2 sm:grid-cols-3">
+                <div className="grid gap-2">
                     <Button
                         variant="outline"
                         onClick={handlePrepareLigaOffline}
@@ -562,14 +662,6 @@ export default function VerLiga() {
                         {offlineMeta && !offlineProgress.running && (
                             <span className="text-[0.65rem] text-sky/60">{offlineMeta.counts.partidos}p · {offlineMeta.counts.equipos}e</span>
                         )}
-                    </Button>
-                    <Button variant="outline" onClick={handleExportPDF} className="justify-start">
-                        <FileText className="h-4 w-4 shrink-0" />
-                        Exportar PDF
-                    </Button>
-                    <Button variant="outline" onClick={handleExportCSV} className="justify-start">
-                        <FileSpreadsheet className="h-4 w-4 shrink-0" />
-                        Exportar CSV
                     </Button>
                 </div>
                 {offlineMeta && (

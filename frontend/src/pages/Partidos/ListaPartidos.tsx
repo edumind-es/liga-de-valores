@@ -18,12 +18,14 @@
 
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Calendar, Clock, Copy, Edit, Key, Link2, Loader2, Plus, Trash2, Trophy, Wifi, X } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Copy, Download, Edit, Key, Link2, Loader2, Plus, Trash2, Trophy, Wifi, X } from 'lucide-react';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { useQueryClient } from '@tanstack/react-query';
 import { usePartidos, useDeletePartido } from '@/hooks/usePartidos';
 import { useLiga } from '@/hooks/useLigas';
 import { partidosApi } from '@/api/partidos';
+import { ligasApi } from '@/api/ligas';
+import { ExportarDatosDialog } from '@/components/export/ExportarDatosDialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -61,6 +63,7 @@ export default function ListaPartidos() {
     const [pinLoading, setPinLoading] = useState<Record<number, boolean>>({});
     const [offlineMeta, setOfflineMeta] = useState<OfflineLeagueMeta | null>(null);
     const [isPreparingOffline, setIsPreparingOffline] = useState(false);
+    const [isExportOpen, setIsExportOpen] = useState(false);
 
     useEffect(() => {
         if (!leagueId) return;
@@ -187,8 +190,34 @@ export default function ListaPartidos() {
         }
     };
 
+    const exportItems = partidosLista.map((partido) => ({
+        id: partido.id,
+        label: `${partido.equipo_local.nombre} vs ${partido.equipo_visitante.nombre}`,
+        sublabel: [
+            partido.tipo_deporte.nombre,
+            partido.fecha_hora
+                ? new Date(partido.fecha_hora).toLocaleDateString('es-ES')
+                : null,
+            partido.finalizado ? 'Finalizado' : 'Pendiente',
+        ].filter(Boolean).join(' · '),
+    }));
+
     return (
         <div className="space-y-6">
+            <ExportarDatosDialog
+                open={isExportOpen}
+                onOpenChange={setIsExportOpen}
+                title="Exportar partidos"
+                description="Descarga los datos completos de los partidos seleccionados."
+                itemNoun="partidos"
+                items={exportItems}
+                onExport={(formato, selectedIds) =>
+                    ligasApi.exportEstadisticas(leagueId, formato, {
+                        partidoIds: selectedIds ?? undefined,
+                    })
+                }
+            />
+
             <Button variant="ghost" size="sm" asChild className="w-fit pl-0 hover:bg-transparent">
                 <Link to={`/ligas/${leagueId}`}>
                     <ArrowLeft className="mr-1 h-4 w-4" />
@@ -202,6 +231,10 @@ export default function ListaPartidos() {
                 eyebrow="Gestión de partidos"
             >
                 <Badge variant="outline">{partidosLista.length} partidos</Badge>
+                <Button variant="outline" className="gap-2" onClick={() => setIsExportOpen(true)}>
+                    <Download className="h-5 w-5" />
+                    Exportar
+                </Button>
                 <Button asChild className="gap-2">
                     <Link to={`/ligas/${leagueId}/partidos/crear`}>
                         <Plus className="h-5 w-5" />

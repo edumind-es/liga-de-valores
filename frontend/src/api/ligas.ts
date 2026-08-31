@@ -148,13 +148,13 @@ export const ligasApi = {
     exportEstadisticas: async (
         ligaId: number,
         formato: 'csv' | 'pdf' = 'csv',
-        jornadaId?: number,
-        equipoId?: number,
+        filtros: { jornadaIds?: number[]; equipoId?: number; partidoIds?: number[] } = {},
     ): Promise<void> => {
         const apiUrl = import.meta.env.VITE_API_URL || '/api/v1';
         const params = new URLSearchParams({ formato });
-        if (jornadaId) params.set('jornada_id', jornadaId.toString());
-        if (equipoId) params.set('equipo_id', equipoId.toString());
+        filtros.jornadaIds?.forEach((id) => params.append('jornada_id', id.toString()));
+        if (filtros.equipoId) params.set('equipo_id', filtros.equipoId.toString());
+        filtros.partidoIds?.forEach((id) => params.append('partido_id', id.toString()));
         const response = await authenticatedFetch(`${apiUrl}/ligas/${ligaId}/export/estadisticas?${params}`);
         if (!response.ok) throw new Error('Error al exportar estadísticas');
         const blob = await response.blob();

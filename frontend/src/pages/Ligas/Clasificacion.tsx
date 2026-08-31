@@ -18,8 +18,10 @@
 
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Medal, Trophy, UserCheck, Users } from 'lucide-react';
+import { ArrowLeft, Download, FileSpreadsheet, Medal, Trophy, UserCheck, Users } from 'lucide-react';
 import { useClasificacion, useLiga } from '@/hooks/useLigas';
+import { ligasApi } from '@/api/ligas';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -38,8 +40,25 @@ export default function Clasificacion() {
     const { id } = useParams<{ id: string }>();
     const ligaId = id ? parseInt(id, 10) : 0;
     const [searchValue, setSearchValue] = useState('');
+    const [isExporting, setIsExporting] = useState(false);
 
     const { data: liga, isLoading: isLoadingLiga } = useLiga(ligaId);
+
+    const handleExport = async (formato: 'csv' | 'pdf') => {
+        setIsExporting(true);
+        try {
+            if (formato === 'csv') {
+                await ligasApi.exportCSV(ligaId);
+            } else {
+                await ligasApi.exportPDF(ligaId);
+            }
+            toast.success(`Clasificación descargada (${formato.toUpperCase()})`);
+        } catch {
+            toast.error(`No se pudo exportar la clasificación (${formato.toUpperCase()})`);
+        } finally {
+            setIsExporting(false);
+        }
+    };
     const { data: clasificacionData, isLoading: isLoadingClasificacion } = useClasificacion(ligaId);
 
     if (isLoadingLiga || isLoadingClasificacion) {
@@ -91,6 +110,14 @@ export default function Clasificacion() {
                 description="Puntos deportivos y valores educativos en una sola tabla."
                 eyebrow="Seguimiento de resultados"
             >
+                <Button variant="outline" size="sm" onClick={() => void handleExport('csv')} disabled={isExporting}>
+                    <FileSpreadsheet className="mr-2 h-4 w-4" />
+                    Exportar CSV
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => void handleExport('pdf')} disabled={isExporting}>
+                    <Download className="mr-2 h-4 w-4" />
+                    Exportar PDF
+                </Button>
                 <Button variant="outline" size="sm" asChild>
                     <Link to={`/ligas/${liga.id}`}>
                         <ArrowLeft className="mr-2 h-4 w-4" />

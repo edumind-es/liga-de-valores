@@ -379,3 +379,78 @@ async def test_match_role_schema_can_be_locked(client: AsyncClient, session: Asy
     )
     assert blocked_response.status_code == 409
     assert blocked_response.json()["detail"] == "schema_locked"
+
+
+@pytest.mark.asyncio
+async def test_export_estadisticas_seleccion_multiple(client: AsyncClient, session: AsyncSession):
+    """El export de estadísticas admite varias jornadas o partidos concretos."""
+    from sqlalchemy import select
+    from app.models import TipoDeporte, Jornada, Partido
+
+    user = await create_random_user(session)
+    headers = await authentication_token_from_email(client, user.email, session)
+
+    liga = Liga(nombre="Liga Export", usuario_id=user.id)
+    session.add(liga)
+    await session.commit()
+    await session.refresh(liga)
+
+    e1 = Equipo(nombre="Rojo", liga_id=liga.id)
+    e2 = Equipo(nombre="Azul", liga_id=liga.id)
+    session.add_all([e1, e2])
+    await session.commit()
+    await session.refresh(e1)
+    await session.refresh(e2)
+
+    sport = (await session.execute(select(TipoDeporte))).scalars().first()
+
+    j1 = Jornada(nombre="Jornada 1", liga_id=liga.id, numero=1)
+    j2 = Jornada(nombre="Jornada 2", liga_id=liga.id, numero=2)
+    j3 = Jornada(nombre="Jornada 3", liga_id=liga.id, numero=3)
+    session.add_all([j1, j2, j3])
+    await session.commit()
+
+    partidos = []
+    for jornada in (j1, j2, j3):
+        p = Partido(
+            liga_id=liga.id,
+            jornada_id=jornada.id,
+            tipo_deporte_id=sport.id,
+            equipo_local_id=e1.id,
+            equipo_visitante_id=e2.id,
+        )
+        session.add(p)
+        partidos.append(p)
+    await session.commit()
+    for p in partidos:
+        await session.refresh(p)
+
+    # Sin filtros: exporta los 3 partidos
+    response = await client.get(f"/api/v1/ligas/{liga.id}/export/estadisticas", headers=headers)
+    assert response.status_code == 200
+    filas = [l for l in response.text.strip().splitlines() if l.strip()]
+    assert len(filas) == 1 + 3  # cabecera + 3 partidos
+
+    # Selección de dos jornadas (parámetro repetido)
+    response = await client.get(
+        f"/api/v1/ligas/{liga.id}/export/estadisticas",
+        params=[("jornada_id", j1.id), ("jornada_id", j3.id)],
+        headers=headers,
+    )
+    assert response.status_code == 200
+    filas = [l for l in response.text.strip().splitlines() if l.strip()]
+    assert len(filas) == 1 + 2
+    assert "Jornada 1" in response.text
+    assert "Jornada 2" not in response.text
+    assert "Jornada 3" in response.text
+
+    # Selección de partidos concretos
+    response = await client.get(
+        f"/api/v1/ligas/{liga.id}/export/estadisticas",
+        params=[("partido_id", partidos[1].id)],
+        headers=headers,
+    )
+    assert response.status_code == 200
+    filas = [l for l in response.text.strip().splitlines() if l.strip()]
+    assert len(filas) == 1 + 1
+    assert "Jornada 2" in response.text
