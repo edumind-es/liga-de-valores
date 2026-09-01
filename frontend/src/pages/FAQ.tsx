@@ -17,7 +17,7 @@
  */
 
 import { Link } from 'react-router-dom';
-import { BookOpen, Download, Heart, HelpCircle, Instagram, Send, Share2, Trophy } from 'lucide-react';
+import { BookOpen, Camera, Download, Heart, HelpCircle, Send, Share2, Trophy } from 'lucide-react';
 import PublicEditorialShell from '@/components/layout/PublicEditorialShell';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -32,7 +32,7 @@ export default function FAQ() {
                 <div className="flex flex-wrap gap-2">
                     <Button asChild variant="editorialOutline">
                         <a href="https://instagram.com/edumind_es" target="_blank" rel="noopener noreferrer">
-                            <Instagram className="h-4 w-4" />
+                            <Camera className="h-4 w-4" />
                             @edumind_es
                         </a>
                     </Button>
