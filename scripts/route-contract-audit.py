@@ -206,11 +206,49 @@ def simplify_special_method(method: str) -> str:
     return method
 
 
+def iter_api_routes(
+    routes: Iterable[object],
+    prefix: str = "",
+    _vistos: set[int] | None = None,
+) -> Iterable[tuple[str, APIRoute]]:
+    """Recorre las rutas resolviendo los contenedores intermedios.
+
+    FastAPI no cuelga las rutas incluidas directamente de ``app.routes``: mete
+    un ``_IncludedRouter`` perezoso que guarda aparte el router original y su
+    prefijo. Sin descender por ahi solo se veian las rutas de primer nivel
+    (6 de casi noventa), y la auditoria daba por ausente medio API: decia que
+    faltaba ``POST /api/v1/auth/register`` mientras la propia puerta de release
+    registraba usuarios contra ese mismo endpoint.
+    """
+    if _vistos is None:
+        _vistos = set()
+    for route in routes:
+        if id(route) in _vistos:
+            continue
+        _vistos.add(id(route))
+
+        if isinstance(route, APIRoute):
+            yield prefix, route
+            continue
+
+        # `_IncludedRouter`: el router perezoso de FastAPI.
+        original = getattr(route, "original_router", None)
+        if original is not None:
+            contexto = getattr(route, "include_context", None)
+            sub = getattr(contexto, "prefix", "") or ""
+            yield from iter_api_routes(getattr(original, "routes", []), f"{prefix}{sub}", _vistos)
+            continue
+
+        # APIRouter anidado o Mount (p. ej. /static, que no trae APIRoute).
+        subrutas = getattr(route, "routes", None)
+        if subrutas:
+            sub = getattr(route, "prefix", "") or getattr(route, "path", "") or ""
+            yield from iter_api_routes(subrutas, f"{prefix}{sub}", _vistos)
+
+
 def route_records_from_router(routes: Iterable[object], source: str, prefix: str = "") -> list[RouteRecord]:
     records: list[RouteRecord] = []
-    for route in routes:
-        if not isinstance(route, APIRoute):
-            continue
+    for prefijo_interno, route in iter_api_routes(routes, prefix):
         filtered_methods = sorted(
             simplify_special_method(method)
             for method in route.methods
@@ -218,7 +256,7 @@ def route_records_from_router(routes: Iterable[object], source: str, prefix: str
         )
         if not filtered_methods:
             continue
-        path = canonicalize_path(f"{prefix}{route.path}")
+        path = canonicalize_path(f"{prefijo_interno}{route.path}")
         records.append(
             RouteRecord(
                 path=path,
