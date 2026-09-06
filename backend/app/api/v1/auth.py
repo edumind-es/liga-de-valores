@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2024-2025 EDUmind - Los Mundos Edufis
+# Copyright (C) 2024-2026 Luis Vilela Acuña <contacto@edumind.es>
 # Author: Luis Vilela Acuña
 #
 # This program is free software: you can redistribute it and/or modify
@@ -217,7 +217,7 @@ async def register(
                 f"Confirma tu dirección de email haciendo clic en el siguiente enlace "
                 f"(válido durante 24 horas):\n\n{verify_url}\n\n"
                 f"Si no has creado una cuenta en Liga EDUmind, ignora este mensaje.\n\n"
-                f"— Equipo EDUmind"
+                f"— Luis Vilela Acuña · EDUmind"
             ),
         )
 
@@ -653,7 +653,7 @@ async def resend_verification_email(
             f"Hola,\n\n"
             f"Aquí tienes un nuevo enlace para verificar tu dirección de email "
             f"(válido durante 24 horas):\n\n{verify_url}\n\n"
-            f"— Equipo EDUmind"
+            f"— Luis Vilela Acuña · EDUmind"
         ),
     )
 

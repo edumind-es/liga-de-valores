@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 EDUmind - Los Mundos Edufis
+ * Copyright (C) 2024-2026 Luis Vilela Acuña <contacto@edumind.es>
  * Author: Luis Vilela Acuña
  *
  * This program is free software: you can redistribute it and/or modify
@@ -168,7 +168,7 @@ export default function FAQ() {
                                 Como propongo un deporte nuevo
                             </summary>
                             <p className="mt-3 leading-relaxed text-[var(--editorial-muted)]">
-                                Puedes usar la ruta de propuesta desde el pie de pagina o compartir la idea con el equipo EDUmind para evaluar integracion en el catalogo comun.
+                                Puedes usar la ruta de propuesta desde el pie de pagina o compartir la idea con Luis Vilela Acuña (contacto@edumind.es) para evaluar integracion en el catalogo comun.
                             </p>
                         </details>
                     </CardContent>
