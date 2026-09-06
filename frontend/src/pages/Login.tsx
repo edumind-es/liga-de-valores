@@ -119,7 +119,7 @@ export default function Login() {
                         className="h-20 w-20 rounded-2xl object-cover shadow-[0_8px_24px_rgba(10,9,7,0.5)]"
                     />
                     <div className="text-center">
-                        <p className="text-[0.65rem] uppercase tracking-[0.2em] text-sub">Los Mundos Edufis</p>
+                        <p className="text-[0.65rem] uppercase tracking-[0.2em] text-sub">por Luis Vilela Acuña</p>
                         <h1 className="text-3xl font-bold tracking-tight text-ink">Liga EDUmind</h1>
                     </div>
                     <img

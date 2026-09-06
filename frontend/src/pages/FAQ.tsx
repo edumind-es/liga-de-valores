@@ -61,7 +61,7 @@ export default function FAQ() {
                             Liga EDUmind no solo cuenta resultados deportivos: integra roles de equipo, seguimiento educativo y dinamicas de aula.
                         </p>
                         <p>
-                            Forma parte del ecosistema Los Mundos Edufis para llevar la Educacion Fisica a experiencias mas narrativas, accesibles y reutilizables.
+                            Forma parte del ecosistema EDUmind, de Luis Vilela Acuña, para llevar la Educacion Fisica a experiencias mas narrativas, accesibles y reutilizables.
                         </p>
                     </CardContent>
                 </Card>

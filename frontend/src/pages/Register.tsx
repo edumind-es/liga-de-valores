@@ -78,7 +78,7 @@ export default function Register() {
                         <img src="/liga_logo_oficial.png" alt="Logo Liga EDUmind" className="lme-logo" width="40" height="40" />
                         <div className="d-flex flex-column">
                             <span className="fw-semibold text-ink">Liga EDUmind</span>
-                            <small className="text-sub" style={{ fontSize: '0.75rem' }}>Los Mundos Edufis</small>
+                            <small className="text-sub" style={{ fontSize: '0.75rem' }}>por Luis Vilela Acuña</small>
                         </div>
                     </Link>
                     <AccessibilityMenu />
