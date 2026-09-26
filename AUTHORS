@@ -1,21 +1,18 @@
-EDUmind - liga_edumind
-===================================
+Liga de Valores — autoría
+=========================
 
-AUTORES PRINCIPALES: Luis Vilela Acuña
+Autor y titular único: Luis Vilela Acuña <contacto@edumind.es> · EDUmind®
+  - Concepción pedagógica (Los Cinco Mundos, juego limpio, arbitraje y grada)
+  - Arquitectura, desarrollo, diseño y UX
+  - Desarrollado con vibe coding con asistencia de IA (ver «Hecho con IA» en README.md)
 
-Luis Vilela Acuña <contacto@edumind.es>
-  - Concepción original y arquitectura
-  - Desarrollo principal
-  - Diseño y UX
+Contribuciones externas: ninguna hasta la fecha. Las aportaciones que lleguen
+por pull request se reconocerán aquí con nombre y ámbito.
 
-CONTRIBUIDORES:
-
-[Lista de contribuidores]
-
----
-
-NOTA LEGAL:
-Todos los contribuidores aceptan que sus aportaciones se licencien
-bajo GNU AGPL v3.0 y que EDUmind mantenga la gestión del proyecto.
-El código es libre; la marca EDUmind® es propiedad de Luis Vilela Acuña
-y no se cede con el código (ver TRADEMARKS.md).
+Nota legal
+----------
+Quien contribuya acepta que su aportación se licencie bajo la misma licencia
+doble del proyecto, AGPL-3.0-or-later OR EUPL-1.2 (ver LICENSE y COPYRIGHT),
+y que la gestión del proyecto siga en manos de su autor. El código es libre;
+la marca EDUmind® es propiedad de Luis Vilela Acuña y no se cede con el código
+(ver TRADEMARKS.md).

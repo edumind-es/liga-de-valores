@@ -53,14 +53,14 @@ Frontend (npm; la licencia completa de cada una está en su `package.json` dentr
 
 Backend (pip):
 
-- FastAPI, Starlette, Uvicorn, Gunicorn — MIT
+- FastAPI y Gunicorn — MIT; Starlette y Uvicorn — BSD-3-Clause
 - SQLAlchemy y Alembic — MIT
 - Pydantic — MIT
 - ReportLab (PDF) — BSD
 - Pillow — MIT-CMU
 - openpyxl — MIT
 - aiosmtplib, arq, redis — MIT
-- python-jose, passlib, argon2-cffi — MIT / BSD / MIT
+- python-jose — MIT; passlib — BSD; argon2-cffi — MIT
 
 ## Servicios externos con los que se comunica
 
