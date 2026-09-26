@@ -25,7 +25,6 @@ import App from './App.tsx'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './lib/react-query'
 import { Toaster } from 'sonner'
-import { initializeMatomo } from './lib/matomo'
 
 const AUTO_RECOVERY_KEY = 'edumind:auto-recover:v1';
 const AUTO_RECOVERY_COOLDOWN_MS = 2 * 60 * 1000;
@@ -97,8 +96,6 @@ window.addEventListener('error', (event) => {
 window.addEventListener('unhandledrejection', (event) => {
   recoverAppIfNeeded(event.reason);
 });
-
-initializeMatomo()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
