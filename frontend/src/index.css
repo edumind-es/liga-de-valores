@@ -2094,6 +2094,8 @@ h3,
 body.lme-body .edumind-footer {
   --ef-text: #4b5563;          /* 7,2:1 sobre #f8f9fa */
   --ef-support: #047857;       /* 5,2:1 sobre #f8f9fa */
+  --ef-link: #1d4ed8;          /* 6,4:1 sobre #f8f9fa (el paquete trae #3b82f6, 3,5:1) */
+  --ef-link-hover: #1e40af;
 }
 @media (prefers-color-scheme: dark) {
   body.lme-body .edumind-footer {

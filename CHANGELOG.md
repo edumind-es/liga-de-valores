@@ -24,6 +24,7 @@ Corrección tras la evaluación VCER del 2026-09-25 (de «No recomendable», 40 
 - Accesibilidad: nombre accesible del filtro de categorías de la wiki, `<label>` en el tipo de marcador y en
   «Permite empate» de `/proponer-deporte`, texto del enlace de volver, botones de icono del buscador de pictogramas.
 - Contraste: gris auxiliar `#5d6f8f` → `#46556f`; botón SSO con texto oscuro; pie `@edumind/footer` ajustado desde CSS local.
+- Regiones: `<main>` en `/express`, `/partido`, `/proponer-deporte` y `/ejemplo-didactico`; `h1` en las pantallas de `/partido`.
 - `/express` desbordaba 19 px a 375 px cuando la tipografía aún no había cargado (botón con `nowrap`).
 - `/express` decía «26 deportes»; el catálogo tiene más de 40.
 - `COPYRIGHT` y `AUTHORS` coherentes con la licencia doble AGPL-3.0-or-later / EUPL-1.2.

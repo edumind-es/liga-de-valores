@@ -22,7 +22,7 @@ import { Link } from "react-router-dom";
 
 export default function SportProposalPage() {
     return (
-        <div className="lme-body min-h-screen p-4 md:p-8">
+        <main className="lme-body min-h-screen p-4 md:p-8">
             <div className="lme-gradient"></div>
             <div className="relative z-10 mx-auto max-w-2xl">
                 <div className="mb-8 flex items-center gap-4">
@@ -54,6 +54,6 @@ export default function SportProposalPage() {
                     <SportProposalForm />
                 </div>
             </div>
-        </div>
+        </main>
     );
 }

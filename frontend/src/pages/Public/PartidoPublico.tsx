@@ -239,15 +239,15 @@ function isRetryableSendError(error: unknown): boolean {
 
 function Confirmacion({ onReset, isQueued }: { onReset: () => void; isQueued: boolean }) {
     return (
-        <div className="flex min-h-screen items-center justify-center bg-[var(--editorial-bg)] p-4">
+        <main className="flex min-h-screen items-center justify-center bg-[var(--editorial-bg)] p-4">
             <Card variant="editorial" className="editorial-card w-full max-w-md text-center">
                 <CardContent className="space-y-4 pt-8 pb-8">
                     <div className="flex justify-center">
                         <CheckCircle className="h-16 w-16 text-green-500" />
                     </div>
-                    <h2 className="text-2xl font-bold text-[var(--editorial-ink)]">
+                    <h1 className="text-2xl font-bold text-[var(--editorial-ink)]">
                         {isQueued ? '¡Marcador guardado!' : '¡Marcador enviado!'}
-                    </h2>
+                    </h1>
                     <p className="text-[var(--editorial-muted)]">
                         {isQueued
                             ? 'No había conexión. Se enviará automáticamente cuando este dispositivo vuelva a tener internet.'
@@ -262,7 +262,7 @@ function Confirmacion({ onReset, isQueued }: { onReset: () => void; isQueued: bo
                     </Button>
                 </CardContent>
             </Card>
-        </div>
+        </main>
     );
 }
 
@@ -418,10 +418,10 @@ export default function PartidoPublico() {
     // Render: formulario PIN
     if (!partido) {
         return (
-            <div className="flex min-h-screen flex-col items-center justify-center bg-[var(--editorial-bg)] p-4 gap-4">
+            <main className="flex min-h-screen flex-col items-center justify-center bg-[var(--editorial-bg)] p-4 gap-4">
                 <Card variant="editorial" className="editorial-card w-full max-w-md">
                     <CardHeader className="text-center space-y-2">
-                        <CardTitle className="text-2xl text-[var(--editorial-ink)]">Acceso al partido</CardTitle>
+                        <h1 className="text-2xl font-semibold leading-none tracking-tight text-[var(--editorial-ink)]">Acceso al partido</h1>
                         <CardDescription className="text-[var(--editorial-muted)]">
                             Introduce el PIN de 6 dígitos del partido que os ha dado el/la docente.
                         </CardDescription>
@@ -471,13 +471,13 @@ export default function PartidoPublico() {
                         </div>
                     </button>
                 )}
-            </div>
+            </main>
         );
     }
 
     // ---------------------------------------------------------------------------
     return (
-        <div className="min-h-screen bg-[var(--editorial-bg)] p-4">
+        <main className="min-h-screen bg-[var(--editorial-bg)] p-4">
             <div className="mx-auto max-w-5xl space-y-5">
 
                 {/* Cabecera */}
@@ -644,6 +644,6 @@ export default function PartidoPublico() {
                     </CardContent>
                 </Card>
             </div>
-        </div>
+        </main>
     );
 }

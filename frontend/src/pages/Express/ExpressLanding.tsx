@@ -23,7 +23,7 @@ import { Card, CardContent } from '@/components/ui/card';
 
 export default function ExpressLanding() {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#1b1916] via-[#242019] to-[#1b1916] flex items-center justify-center p-4">
+        <main className="min-h-screen bg-gradient-to-br from-[#1b1916] via-[#242019] to-[#1b1916] flex items-center justify-center p-4">
             <Card variant="glass" className="max-w-2xl w-full">
                 <CardContent className="pt-12 pb-8 px-8 text-center">
                     <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-r from-mint to-sky mb-6">
@@ -98,6 +98,6 @@ export default function ExpressLanding() {
                     </div>
                 </CardContent>
             </Card>
-        </div>
+        </main>
     );
 }

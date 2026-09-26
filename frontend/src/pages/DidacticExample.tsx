@@ -21,7 +21,7 @@ function MethodItem({ title, desc }: { title: string, desc: React.ReactNode }) {
 
 export default function DidacticExample() {
     return (
-        <div className="space-y-8 animate-fade-in pb-12">
+        <main className="space-y-8 animate-fade-in pb-12">
             {/* Disclaimer Banner */}
             <div className="bg-blue-500/10 border-l-4 border-blue-500 p-4 rounded-r-lg flex gap-3 text-sm text-blue-200">
                 <Info className="w-5 h-5 shrink-0 text-blue-400" />
@@ -358,7 +358,7 @@ export default function DidacticExample() {
                     </div>
                 </div>
             </section>
-        </div>
+        </main>
     );
 }
 
