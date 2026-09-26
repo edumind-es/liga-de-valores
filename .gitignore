@@ -35,6 +35,8 @@ test-results/
 uploads/
 static/uploads/
 backend/static/uploads/
+# Fichas y dibujos subidos por el alumnado: contenido de aula, nunca al repo
+backend/static/submissions/
 backups/
 backup/
 *.sqlite
