@@ -153,7 +153,7 @@ export default function Login() {
                             {ssoEnabled && (
                                 <a
                                     href={getOidcStartUrl('/ligas')}
-                                    className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-vio px-4 py-3 text-sm font-semibold text-white shadow-[0_4px_16px_rgba(240,121,90,0.35)] transition-all hover:bg-vio/90 hover:shadow-[0_6px_20px_rgba(240,121,90,0.45)] active:scale-[0.98]"
+                                    className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-vio px-4 py-3 text-sm font-semibold text-[#1b1916] shadow-[0_4px_16px_rgba(240,121,90,0.35)] transition-all hover:bg-vio/90 hover:shadow-[0_6px_20px_rgba(240,121,90,0.45)] active:scale-[0.98]"
                                 >
                                     <ShieldCheck className="h-4 w-4" />
                                     Acceder con EDUmind

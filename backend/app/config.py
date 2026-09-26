@@ -137,10 +137,6 @@ class Settings(BaseSettings):
         "https://panel.edumind.es",
     ]
     
-    # Matomo
-    MATOMO_BASE_URL: str | None = None
-    MATOMO_SITE_ID: str | None = None
-    
     # Nextcloud Xunta (Evidencias)
     NEXTCLOUD_WEBDAV_URL: str | None = None  # e.g., https://boxabalar.edu.xunta.gal/remote.php/dav/files/USERNAME/
     NEXTCLOUD_USERNAME: str | None = None

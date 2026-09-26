@@ -22,15 +22,16 @@ import { Link } from "react-router-dom";
 
 export default function SportProposalPage() {
     return (
-        <div className="lme-body min-h-screen p-4 md:p-8">
+        <main className="lme-body min-h-screen p-4 md:p-8">
             <div className="lme-gradient"></div>
             <div className="relative z-10 mx-auto max-w-2xl">
                 <div className="mb-8 flex items-center gap-4">
                     <Link
                         to="/"
+                        aria-label="Volver al inicio"
                         className="rounded-full border border-lme-border bg-white/5 p-2 text-sub transition-colors hover:bg-white/10 hover:text-ink"
                     >
-                        <ArrowLeft className="h-6 w-6" />
+                        <ArrowLeft className="h-6 w-6" aria-hidden="true" />
                     </Link>
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
@@ -53,6 +54,6 @@ export default function SportProposalPage() {
                     <SportProposalForm />
                 </div>
             </div>
-        </div>
+        </main>
     );
 }

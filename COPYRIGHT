@@ -1,9 +1,19 @@
+Liga de Valores
 Copyright (C) 2024-2026 Luis Vilela Acuña <contacto@edumind.es>
-Author: Luis Vilela Acuña
-All rights reserved.
+Autor y único titular: Luis Vilela Acuña · EDUmind®
 
-This software is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).
-See the LICENSE file for more details.
+Este programa es software libre. Puede usarse, copiarse, modificarse y
+redistribuirse bajo la licencia que elija quien lo reutilice:
 
-Registered with Safe Creative.
-Proof of authorship and timestamped via blockchain/digital certification.
+  - GNU Affero General Public License v3.0 o posterior (AGPL-3.0-or-later)
+  - European Union Public Licence v1.2 (EUPL-1.2)
+
+SPDX-License-Identifier: AGPL-3.0-or-later OR EUPL-1.2
+Textos completos: LICENSE, LICENSE-AGPL-3.0-or-later.txt y LICENSE-EUPL-1.2.txt.
+
+La marca EDUmind® y los logotipos no se ceden con el código (ver TRADEMARKS.md).
+El material de terceros (tipografías OFL, pictogramas ARASAAC, librerías) tiene
+su propia licencia: ver CREDITS.md.
+
+La obra está registrada en Safe Creative con sello de tiempo; ese registro
+acredita la autoría y no limita las licencias anteriores.

@@ -197,7 +197,7 @@ export default function RepositorioJuegos() {
                     </div>
 
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                        <p className="text-sm text-[#5d6f8f]">
+                        <p className="text-sm text-[#46556f]">
                             {filteredGames.length} resultado{filteredGames.length !== 1 ? 's' : ''} visible{filteredGames.length !== 1 ? 's' : ''}
                         </p>
                         {selectedSport !== 'all' && (
@@ -211,13 +211,13 @@ export default function RepositorioJuegos() {
 
             {loading ? (
                 <Card variant="editorial" className="editorial-card">
-                    <CardContent className="py-20 text-center text-[#5d6f8f]">Cargando repositorio...</CardContent>
+                    <CardContent className="py-20 text-center text-[#46556f]">Cargando repositorio...</CardContent>
                 </Card>
             ) : filteredGames.length === 0 ? (
                 <Card variant="editorial" className="editorial-card">
                     <CardContent className="py-20 text-center">
                         <p className="text-xl font-medium text-[#4f4a41]">No se encontraron juegos</p>
-                        <p className="mt-2 text-sm text-[#5d6f8f]">Ajusta filtros para ver resultados.</p>
+                        <p className="mt-2 text-sm text-[#46556f]">Ajusta filtros para ver resultados.</p>
                         <Button className="mt-6" variant="editorialOutline" onClick={clearFilters}>
                             Mostrar todo
                         </Button>
@@ -236,7 +236,7 @@ export default function RepositorioJuegos() {
                                 <CardTitle className="line-clamp-2 text-xl text-[#1c1a16] transition-colors group-hover:text-[#315b9a]">
                                     {game.title}
                                 </CardTitle>
-                                <CardDescription className="mt-2 flex items-center gap-2 text-[#5d6f8f]">
+                                <CardDescription className="mt-2 flex items-center gap-2 text-[#46556f]">
                                     <Calendar className="h-3 w-3" />
                                     {format(new Date(game.created_at), "d 'de' MMMM, yyyy", { locale: es })}
                                 </CardDescription>

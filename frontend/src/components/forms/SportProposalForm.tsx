@@ -261,10 +261,11 @@ export default function SportProposalForm() {
 
                 {/* Tipo de Marcador */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-ink">
+                    <label htmlFor="tipo_marcador" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-ink">
                         Tipo de Marcador <span className="text-vio">*</span>
                     </label>
                     <select
+                        id="tipo_marcador"
                         {...form.register("tipo_marcador")}
                         className="flex h-10 w-full items-center justify-between rounded-md border border-lme-border bg-[var(--lme-surface-soft)] px-3 py-2 text-sm text-ink ring-offset-white placeholder:text-sub focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:ring-offset-zinc-950  dark:focus:ring-blue-500"
                     >
@@ -416,8 +417,8 @@ export default function SportProposalForm() {
                         </div>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
-                        <input type="checkbox" {...form.register("permite_empate")} />
-                        <span className="text-gray-700 dark:text-gray-300">Permite empate</span>
+                        <input type="checkbox" id="permite_empate" {...form.register("permite_empate")} />
+                        <label htmlFor="permite_empate" className="text-gray-700 dark:text-gray-300">Permite empate</label>
                     </div>
                     <div className="space-y-1">
                         <label className="text-xs font-medium text-gray-700 dark:text-gray-300">Configuracion avanzada (JSON opcional)</label>

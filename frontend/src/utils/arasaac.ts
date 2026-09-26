@@ -15,6 +15,10 @@ export interface Pictogram {
     keywords?: string[];
 }
 
+/** Fórmula de atribución que exige ARASAAC (CC BY-NC-SA); se muestra donde aparezcan pictogramas. */
+export const ARASAAC_CREDITO =
+    'Autor pictogramas: Sergio Palao. Origen: ARASAAC (http://www.arasaac.org). Licencia: CC BY-NC-SA. Propiedad: Gobierno de Aragón (España)';
+
 const ARASAAC_API_BASE = 'https://api.arasaac.org/v1/pictograms';
 const ARASAAC_STATIC_BASE = 'https://static.arasaac.org/pictograms';
 

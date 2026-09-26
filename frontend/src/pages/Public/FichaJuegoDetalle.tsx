@@ -20,6 +20,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import PublicEditorialShell from '@/components/layout/PublicEditorialShell';
 import { buildApiUrl } from '@/utils/url';
+import { ARASAAC_CREDITO } from '@/utils/arasaac';
 
 interface TaxonomiaInfo {
     id: number;
@@ -215,7 +216,7 @@ export default function FichaJuegoDetalle() {
                             <CardTitle className="font-display text-3xl text-[#1c1a16]">
                                 {game.title}
                             </CardTitle>
-                            <div className="flex flex-wrap gap-4 text-sm text-[#5d6f8f]">
+                            <div className="flex flex-wrap gap-4 text-sm text-[#46556f]">
                                 {game.docente_nombre && (
                                     <div className="flex items-center gap-2">
                                         <User className="h-4 w-4" />
@@ -347,6 +348,12 @@ export default function FichaJuegoDetalle() {
                     </div>
                 </SectionCard>
             )}
+
+            {((game.pictogramas_materiales?.length ?? 0) > 0 || (game.pictogramas_reglas?.length ?? 0) > 0) && (
+                <p className="text-xs leading-relaxed text-[#46556f]">
+                    {ARASAAC_CREDITO}
+                </p>
+            )}
         </PublicEditorialShell>
     );
 }
@@ -371,7 +378,7 @@ function SectionCard({
                     <Icon className={`h-5 w-5 ${accentClassName || ''}`} />
                     {title}
                 </CardTitle>
-                <CardDescription className="text-[#5d6f8f]">
+                <CardDescription className="text-[#46556f]">
                     {description}
                 </CardDescription>
             </CardHeader>

@@ -1,73 +1,42 @@
-# React + TypeScript + Vite
+# Frontend de Liga de Valores
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación React 19 + TypeScript compilada con Vite; PWA con service worker
+(`vite-plugin-pwa`) y copia offline en IndexedDB para el gimnasio sin WiFi.
+El README general del proyecto (qué hace, qué guarda, cómo modificarlo) está
+en [../README.md](../README.md).
 
-Currently, two official plugins are available:
+## Comandos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm ci               # instalar dependencias tal y como fija package-lock.json
+npm run dev          # servidor de desarrollo (http://localhost:5173, API en /api/v1)
+npm run build        # tsc + vite build → dist/
+npm run test:run     # pruebas con Vitest (carpeta tests/)
+npm run lint         # ESLint
+npm run preview      # servir dist/ en local
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Variables: copia `.env.example` a `.env`. `VITE_API_URL` apunta a la API
+(`/api/v1` por defecto) y `VITE_AUTHENTIK_ENABLED` activa el botón de SSO.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Mapa de carpetas
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+| Carpeta | Qué hay |
+|---|---|
+| `src/pages/` | una carpeta o fichero por pantalla: `Ligas/`, `Equipos/`, `Jornadas/`, `Partidos/`, `Public/` (PIN, wiki, generador de fichas), `Express/` (marcador sin cuenta), `Resources/`, `FAQ.tsx`, `PwaGuide.tsx`… |
+| `src/components/` | componentes reutilizables: `ui/` (base shadcn/Radix), `forms/`, `gamesheet/` (fichas y pictogramas ARASAAC), `accessibility/` (menú de accesibilidad), `layout/` |
+| `src/layouts/` | `PublicLayout` y la cáscara editorial de las páginas públicas |
+| `src/lib/` | utilidades de app: `offline/` (IndexedDB y sincronización), `audio.ts` (silbato y gol), `mundos.ts` (Los Cinco Mundos), `react-query.ts` |
+| `src/i18n/locales/` | textos en `es.json`, `gl.json` y `en.json` |
+| `src/store/` | estado global (zustand), incluida la sesión |
+| `src/api/` y `src/utils/` | cliente HTTP y ayudas (`arasaac.ts`, `url.ts`) |
+| `public/` | estáticos: `fonts/` (tipografías locales con `OFL.txt`), `sounds/`, `icons/`, `vendor/lamina-v1.css` (sistema visual Lámina), manifiestos PWA |
+| `tests/` | pruebas Vitest + Testing Library |
+
+## Convenciones
+
+- Colores solo a través de tokens CSS (`--ink`, `--sub`, `--mint`, `--sky`, `--vio`, `--editorial-*`) definidos en `src/index.css`; así funcionan el modo e-ink, el alto contraste y el pie sin reescribir componentes.
+- Tipografías en local (`public/fonts`); no añadir `<link>` a Google Fonts ni otros CDN: la app no debe cargar nada de terceros al abrirse.
+- Iconos: `lucide-react`. Componentes base: `src/components/ui` (Radix).
+- Todo el código, los comentarios y los textos de pantalla en español (gallego e inglés vía i18n).
+- Cabecera de licencia AGPL en cada fichero fuente nuevo (copiar de cualquier `.tsx` existente).

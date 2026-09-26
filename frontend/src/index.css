@@ -45,6 +45,40 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   Tipos del Sistema Lámina, también vendorizados (antes Google Fonts)
+   Outfit (variable 400-800, display y cuerpo) + IBM Plex Mono (metadatos)
+   Licencia OFL 1.1: ver /fonts/OFL.txt y CREDITS.md
+   ═══════════════════════════════════════════════════════════════════ */
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('/fonts/outfit-variable.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/ibm-plex-mono-regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/ibm-plex-mono-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/ibm-plex-mono-600.woff2') format('woff2');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    MODO E-INK (EDUmind e-ink system, opt-in desde accesibilidad)
    Papel monocromo cálido, tinta oscura, Atkinson Hyperlegible.
    Remapea los tokens de la app: como todos los componentes pintan a
@@ -2048,4 +2082,28 @@ h3,
   animation-iteration-count: 1 !important;
   transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Pie @edumind/footer: ajuste local de contraste (WCAG AA, ≥ 4,5:1).
+   El paquete pinta «App» y el bloque de marca con opacidad 0,6/0,7 y el
+   enlace «Apoyar» en #10b981 (2,4:1 sobre claro). Se corrige aquí, desde la
+   app, sin tocar el paquete; cuando @edumind/footer lo arregle, este bloque
+   puede retirarse. body.lme-body gana en especificidad a .dark .edumind-footer.
+   ═══════════════════════════════════════════════════════════════════ */
+body.lme-body .edumind-footer {
+  --ef-text: #4b5563;          /* 7,2:1 sobre #f8f9fa */
+  --ef-support: #047857;       /* 5,2:1 sobre #f8f9fa */
+  --ef-link: #1d4ed8;          /* 6,4:1 sobre #f8f9fa (el paquete trae #3b82f6, 3,5:1) */
+  --ef-link-hover: #1e40af;
+}
+@media (prefers-color-scheme: dark) {
+  body.lme-body .edumind-footer {
+    --ef-text: #a9aec4;        /* 7,8:1 sobre #171b26 */
+    --ef-support: #34d399;     /* 9,0:1 sobre #171b26 */
+  }
+}
+body.lme-body .edumind-footer__trademark,
+body.lme-body .edumind-footer__version-label {
+  opacity: 1;
 }

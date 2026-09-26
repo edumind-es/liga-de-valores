@@ -535,7 +535,8 @@ async def submit_nota_via_pin(
     - Texto libre de la anotación (sin nombre, sin IP, sin identificador del alumno).
     - Tipo pedagógico y timestamp de creación.
     - La nota queda en estado 'pendiente' hasta que el docente la apruebe o rechace.
-    - Las notas rechazadas o no revisadas en 30 días se eliminan automáticamente.
+    - No hay purga automática: el docente aprueba, rechaza o elimina cada nota
+      desde la gestión del partido (DELETE /partidos/{id}/notas/{nota_id}).
     """
     if not body.consentimiento_lopd:
         raise HTTPException(

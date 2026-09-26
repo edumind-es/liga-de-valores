@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react';
 import { Search, Loader2, X } from 'lucide-react';
-import { searchPictograms, type Pictogram } from '@/utils/arasaac';
+import { searchPictograms, ARASAAC_CREDITO, type Pictogram } from '@/utils/arasaac';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -59,6 +59,7 @@ export default function PictogramSearch({ onSelect, compact = false }: Pictogram
                     type="submit"
                     size={compact ? "sm" : "default"}
                     disabled={loading || query.length < 2}
+                    aria-label="Buscar pictograma"
                 >
                     {loading ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -75,6 +76,7 @@ export default function PictogramSearch({ onSelect, compact = false }: Pictogram
                             size="sm"
                             variant="ghost"
                             onClick={() => setShowResults(false)}
+                            aria-label="Cerrar resultados"
                         >
                             <X className="h-4 w-4" />
                         </Button>
@@ -95,6 +97,7 @@ export default function PictogramSearch({ onSelect, compact = false }: Pictogram
                             </button>
                         ))}
                     </div>
+                    <p className="mt-2 text-xs leading-relaxed text-sub">{ARASAAC_CREDITO}</p>
                 </div>
             )}
 
