@@ -20,7 +20,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
-import { readFileSync } from 'fs'
+import { copyFileSync, readFileSync } from 'fs'
 import { execSync } from 'child_process'
 
 const frontendPackage = JSON.parse(
@@ -57,6 +57,14 @@ export default defineConfig({
     __APP_BUILD_DIRTY__: JSON.stringify(buildDirty),
   },
   plugins: [
+    // CREDITS.md vive en la raíz del repositorio; se copia al dist para que
+    // /CREDITS.md sea el fichero real y no el index.html del fallback de la SPA.
+    {
+      name: 'copiar-creditos',
+      closeBundle() {
+        copyFileSync(path.resolve(__dirname, '../CREDITS.md'), path.resolve(__dirname, 'dist/CREDITS.md'))
+      },
+    },
     react(),
     VitePWA({
       registerType: 'autoUpdate',
