@@ -28,9 +28,10 @@ export default function SportProposalPage() {
                 <div className="mb-8 flex items-center gap-4">
                     <Link
                         to="/"
+                        aria-label="Volver al inicio"
                         className="rounded-full border border-lme-border bg-white/5 p-2 text-sub transition-colors hover:bg-white/10 hover:text-ink"
                     >
-                        <ArrowLeft className="h-6 w-6" />
+                        <ArrowLeft className="h-6 w-6" aria-hidden="true" />
                     </Link>
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">

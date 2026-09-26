@@ -304,8 +304,8 @@ export default function WikiJuegos() {
                                 setPage(1);
                             }}
                         >
-                            <SelectTrigger variant="editorial">
-                                <Filter className="mr-2 h-4 w-4" />
+                            <SelectTrigger variant="editorial" aria-label="Filtrar por categoría">
+                                <Filter className="mr-2 h-4 w-4" aria-hidden="true" />
                                 <SelectValue placeholder="Categoría" />
                             </SelectTrigger>
                             <SelectContent variant="editorial">
@@ -396,9 +396,9 @@ export default function WikiJuegos() {
             ) : games.length === 0 ? (
                 <Card variant="editorial" className="editorial-card">
                     <CardContent className="py-16 text-center">
-                        <BookOpen className="mx-auto mb-4 h-12 w-12 text-[#5d6f8f]" />
+                        <BookOpen className="mx-auto mb-4 h-12 w-12 text-[#46556f]" />
                         <p className="text-xl text-[#4f4a41]">No hay juegos para estos filtros</p>
-                        <p className="mt-2 text-sm text-[#5d6f8f]">
+                        <p className="mt-2 text-sm text-[#46556f]">
                             Ajusta búsqueda o categorías para encontrar fichas.
                         </p>
                         <Button className="mt-6" variant="editorialOutline" onClick={clearFilters}>
@@ -421,7 +421,7 @@ export default function WikiJuegos() {
                                             {game.title}
                                         </CardTitle>
                                         {game.sport_name && (
-                                            <CardDescription className="mt-1 text-[#5d6f8f]">
+                                            <CardDescription className="mt-1 text-[#46556f]">
                                                 {game.sport_name}
                                             </CardDescription>
                                         )}
@@ -437,7 +437,7 @@ export default function WikiJuegos() {
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <div className="flex items-center gap-2 text-sm text-[#5d6f8f]">
+                                <div className="flex items-center gap-2 text-sm text-[#46556f]">
                                     {game.docente_nombre ? (
                                         <span>Por {game.docente_nombre}</span>
                                     ) : (
@@ -496,7 +496,7 @@ export default function WikiJuegos() {
                             <ChevronLeft className="h-4 w-4" />
                             Anterior
                         </Button>
-                        <span className="text-sm text-[#5d6f8f]">
+                        <span className="text-sm text-[#46556f]">
                             Página {page} de {totalPages}
                         </span>
                         <Button

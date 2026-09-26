@@ -2083,3 +2083,25 @@ h3,
   transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   Pie @edumind/footer: ajuste local de contraste (WCAG AA, ≥ 4,5:1).
+   El paquete pinta «App» y el bloque de marca con opacidad 0,6/0,7 y el
+   enlace «Apoyar» en #10b981 (2,4:1 sobre claro). Se corrige aquí, desde la
+   app, sin tocar el paquete; cuando @edumind/footer lo arregle, este bloque
+   puede retirarse. body.lme-body gana en especificidad a .dark .edumind-footer.
+   ═══════════════════════════════════════════════════════════════════ */
+body.lme-body .edumind-footer {
+  --ef-text: #4b5563;          /* 7,2:1 sobre #f8f9fa */
+  --ef-support: #047857;       /* 5,2:1 sobre #f8f9fa */
+}
+@media (prefers-color-scheme: dark) {
+  body.lme-body .edumind-footer {
+    --ef-text: #a9aec4;        /* 7,8:1 sobre #171b26 */
+    --ef-support: #34d399;     /* 9,0:1 sobre #171b26 */
+  }
+}
+body.lme-body .edumind-footer__trademark,
+body.lme-body .edumind-footer__version-label {
+  opacity: 1;
+}

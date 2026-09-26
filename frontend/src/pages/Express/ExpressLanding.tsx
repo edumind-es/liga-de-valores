@@ -82,7 +82,7 @@ export default function ExpressLanding() {
                     </div>
 
                     <Link to="/express/nuevo">
-                        <Button size="lg" className="text-lg px-8">
+                        <Button size="lg" className="h-auto min-h-12 max-w-full whitespace-normal px-6 py-3 text-lg sm:px-8">
                             <Zap className="mr-2 h-5 w-5" />
                             Crear Partido Nuevo
                         </Button>

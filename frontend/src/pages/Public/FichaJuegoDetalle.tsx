@@ -215,7 +215,7 @@ export default function FichaJuegoDetalle() {
                             <CardTitle className="font-display text-3xl text-[#1c1a16]">
                                 {game.title}
                             </CardTitle>
-                            <div className="flex flex-wrap gap-4 text-sm text-[#5d6f8f]">
+                            <div className="flex flex-wrap gap-4 text-sm text-[#46556f]">
                                 {game.docente_nombre && (
                                     <div className="flex items-center gap-2">
                                         <User className="h-4 w-4" />
@@ -371,7 +371,7 @@ function SectionCard({
                     <Icon className={`h-5 w-5 ${accentClassName || ''}`} />
                     {title}
                 </CardTitle>
-                <CardDescription className="text-[#5d6f8f]">
+                <CardDescription className="text-[#46556f]">
                     {description}
                 </CardDescription>
             </CardHeader>
