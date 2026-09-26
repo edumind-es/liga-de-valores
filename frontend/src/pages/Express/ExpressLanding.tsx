@@ -46,7 +46,7 @@ export default function ExpressLanding() {
                             </div>
                             <div>
                                 <p className="text-ink font-medium">Elige tu deporte</p>
-                                <p className="text-sm text-sub">Selecciona entre 26 deportes disponibles</p>
+                                <p className="text-sm text-sub">Selecciona entre más de 40 deportes disponibles</p>
                             </div>
                         </div>
 
