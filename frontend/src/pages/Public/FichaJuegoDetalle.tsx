@@ -20,6 +20,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import PublicEditorialShell from '@/components/layout/PublicEditorialShell';
 import { buildApiUrl } from '@/utils/url';
+import { ARASAAC_CREDITO } from '@/utils/arasaac';
 
 interface TaxonomiaInfo {
     id: number;
@@ -346,6 +347,12 @@ export default function FichaJuegoDetalle() {
                         ))}
                     </div>
                 </SectionCard>
+            )}
+
+            {((game.pictogramas_materiales?.length ?? 0) > 0 || (game.pictogramas_reglas?.length ?? 0) > 0) && (
+                <p className="text-xs leading-relaxed text-[#46556f]">
+                    {ARASAAC_CREDITO}
+                </p>
             )}
         </PublicEditorialShell>
     );

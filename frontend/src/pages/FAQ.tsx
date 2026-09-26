@@ -171,6 +171,28 @@ export default function FAQ() {
                                 Puedes usar la ruta de propuesta desde el pie de pagina o compartir la idea con Luis Vilela Acuña (contacto@edumind.es) para evaluar integracion en el catalogo comun.
                             </p>
                         </details>
+                        <details className="rounded-xl border border-[var(--editorial-border)] bg-[#f8fbff] p-4">
+                            <summary className="cursor-pointer list-none font-semibold text-[var(--editorial-ink)]">
+                                Créditos, licencia y material ajeno
+                            </summary>
+                            <div className="mt-3 space-y-2 leading-relaxed text-[var(--editorial-muted)]">
+                                <p>
+                                    Liga de Valores es software libre de Luis Vilela Acuña · EDUmind®, con licencia doble{' '}
+                                    <a className="underline" href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener noreferrer">AGPL-3.0-or-later</a>
+                                    {' '}/{' '}
+                                    <a className="underline" href="https://eupl.eu/1.2/es/" target="_blank" rel="noopener noreferrer">EUPL-1.2</a>.
+                                    El código está en{' '}
+                                    <a className="underline" href="https://github.com/edumind-es/liga-de-valores" target="_blank" rel="noopener noreferrer">GitHub</a>.
+                                </p>
+                                <p>
+                                    Los pictogramas de las fichas de juego son de ARASAAC. Autor pictogramas: Sergio Palao. Origen: ARASAAC (http://www.arasaac.org). Licencia: CC BY-NC-SA. Propiedad: Gobierno de Aragón (España).
+                                </p>
+                                <p>
+                                    Tipografías (Outfit, IBM Plex Mono, Atkinson Hyperlegible, Literata) con licencia OFL 1.1, servidas desde esta misma web; iconos Lucide (ISC) y componentes Radix (MIT). Lista completa en{' '}
+                                    <a className="underline" href="https://github.com/edumind-es/liga-de-valores/blob/main/CREDITS.md" target="_blank" rel="noopener noreferrer">CREDITS.md</a>.
+                                </p>
+                            </div>
+                        </details>
                     </CardContent>
                 </Card>
             </section>
