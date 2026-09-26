@@ -45,7 +45,7 @@ Copia `.env.example` a `.env` en `backend/` y `frontend/` y rellénalos. Los val
 ## Pruebas
 
 ```bash
-cd backend && pytest            # 125 pruebas (pytest-asyncio, SQLite en memoria)
+cd backend && pytest            # 127 pruebas (pytest-asyncio, SQLite en memoria)
 cd frontend && npm run test:run # 7 pruebas Vitest + Testing Library
 cd frontend && npm run lint
 ```
@@ -85,7 +85,7 @@ La integración continua (`.github/workflows/ci-cd.yml`) compila el frontend, co
 
 Este recurso se ha desarrollado con vibe coding con asistencia de IA (Claude Code y ChatGPT), según la [política de IA de EDUmind](https://edumind.es/es/legal/ia). Lo que ha comprobado el autor:
 
-- Las 125 pruebas automáticas del backend y las 7 del frontend pasan en cada cambio (integración continua en GitHub Actions, con auditoría de dependencias y de la imagen Docker).
+- Las 127 pruebas automáticas del backend y las 7 del frontend pasan en cada cambio (integración continua en GitHub Actions, con auditoría de dependencias y de la imagen Docker).
 - Las licencias del material ajeno, revisadas una a una en [CREDITS.md](CREDITS.md); los sonidos del marcador quedan pendientes de confirmar.
 - Los textos que ve el alumnado (acceso por PIN, marcador Express, generador de fichas) y las reglas del catálogo de deportes.
 - La ejecución en navegador de escritorio y móvil (375 px), con menú de accesibilidad y comprobación automática con axe.
