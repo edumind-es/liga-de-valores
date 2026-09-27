@@ -18,8 +18,9 @@
 
 import { getImageUrl } from '@/utils/url';
 
+// Silbato: «referee-whistle.wav» de Pablo-F (Freesound #90743, CC BY 3.0),
+// servido desde las subidas del backend; si no está, suena el sintetizado.
 const WHISTLE_PATH = '/static/uploads/90743__pablo-f__referee-whistle.wav';
-const GOAL_PATH = '/sounds/gol.mp3';
 
 const DEFAULT_WHISTLE_VOLUME = 0.95;
 const DEFAULT_GOAL_VOLUME = 0.7;
@@ -97,6 +98,30 @@ export const playWhistle = async (options: PlayOptions = {}) => {
     }
 };
 
+// Gol: tres notas ascendentes sintetizadas con WebAudio. Sin fichero ni
+// licencia que rastrear: el antiguo gol.mp3 no tenía origen conocido.
 export const playGoal = (options: PlayOptions = {}) => {
-    return playAudio(GOAL_PATH, options.volume ?? DEFAULT_GOAL_VOLUME);
+    if (typeof window === 'undefined') return Promise.resolve();
+    const AudioContextCtor = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AudioContextCtor) return Promise.resolve();
+    const volumen = clampVolume(options.volume) ?? DEFAULT_GOAL_VOLUME;
+    const audioContext = new AudioContextCtor();
+    const t0 = audioContext.currentTime;
+    const notas = [523.25, 659.25, 783.99]; // do5, mi5, sol5
+    notas.forEach((frecuencia, i) => {
+        const oscilador = audioContext.createOscillator();
+        const ganancia = audioContext.createGain();
+        oscilador.type = 'triangle';
+        oscilador.frequency.value = frecuencia;
+        oscilador.connect(ganancia);
+        ganancia.connect(audioContext.destination);
+        const inicio = t0 + i * 0.12;
+        const fin = inicio + (i === notas.length - 1 ? 0.45 : 0.14);
+        ganancia.gain.setValueAtTime(0, inicio);
+        ganancia.gain.linearRampToValueAtTime(volumen, inicio + 0.015);
+        ganancia.gain.exponentialRampToValueAtTime(0.001, fin);
+        oscilador.start(inicio);
+        oscilador.stop(fin);
+    });
+    return Promise.resolve();
 };
