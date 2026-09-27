@@ -27,9 +27,11 @@ Desde la versión 3.0.1 no se carga nada de Google Fonts: los ficheros woff2 (su
 
 ## Sonidos
 
-- `frontend/public/sounds/silbato.mp3` y `frontend/public/sounds/gol.mp3` (marcador en vivo, `components/WhistleButton.tsx` y `lib/audio.ts`).
-  **Origen y licencia pendientes de confirmar por el autor.** Los ficheros no llevan metadatos y no consta su procedencia
-  en la documentación; hasta que se confirme, quien reutilice la app debería sustituirlos por sonidos propios o CC0.
+- Silbato: «referee-whistle.wav», de **Pablo-F**, Freesound #90743, licencia
+  [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). No viaja en el repositorio: se sirve desde las subidas
+  del backend (`/static/uploads/`) y, si no está, `lib/audio.ts` sintetiza un silbato con WebAudio.
+- Gol: tres notas sintetizadas con WebAudio en `lib/audio.ts`. Sin fichero.
+- Los antiguos `silbato.mp3` y `gol.mp3`, de origen desconocido, se retiraron en la 3.0.2.
 
 ## Librerías principales
 
