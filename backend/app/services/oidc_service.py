@@ -21,8 +21,8 @@ from typing import Any
 from urllib.parse import urlencode
 
 import httpx
+import jwt
 from fastapi import HTTPException, status
-from jose import JWTError, jwt
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -34,6 +34,9 @@ from app.utils.security import get_password_hash
 
 _DISCOVERY_TTL_SECONDS = 600
 _JWKS_TTL_SECONDS = 600
+# Solo firmas asimétricas: la clave sale del JWKS público, así que nunca debe
+# aceptarse un token HS* ni "none", diga lo que diga su cabecera.
+_ID_TOKEN_ALGORITHMS = frozenset({"RS256", "RS384", "RS512", "ES256", "ES384", "ES512"})
 _discovery_cache: tuple[float, dict[str, Any]] | None = None
 _jwks_cache: tuple[float, dict[str, Any]] | None = None
 
@@ -202,7 +205,7 @@ async def validate_id_token(id_token: str, *, nonce: str | None = None) -> dict[
 
     try:
         header = jwt.get_unverified_header(id_token)
-    except JWTError as exc:
+    except jwt.PyJWTError as exc:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Respuesta OIDC inválida.",
@@ -210,7 +213,7 @@ async def validate_id_token(id_token: str, *, nonce: str | None = None) -> dict[
 
     alg = str(header.get("alg") or "").strip()
     kid = header.get("kid")
-    if not alg or alg.lower() == "none":
+    if alg not in _ID_TOKEN_ALGORITHMS:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Respuesta OIDC inválida.",
@@ -231,14 +234,16 @@ async def validate_id_token(id_token: str, *, nonce: str | None = None) -> dict[
         )
 
     try:
+        # Con PyJWK la firma se verifica con el algoritmo de la clave, no con el
+        # que declara la cabecera del token.
         claims = jwt.decode(
             id_token,
-            signing_key,
+            jwt.PyJWK.from_dict(signing_key),
             algorithms=[alg],
             audience=settings.AUTHENTIK_CLIENT_ID,
             issuer=issuer,
         )
-    except JWTError as exc:
+    except jwt.PyJWTError as exc:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="No se pudo validar la identidad EDUmind.",

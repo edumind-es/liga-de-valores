@@ -72,10 +72,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Set up Python 3.10
+      # 3.14 = misma versión que la imagen de producción (docker/backend/Dockerfile)
+      - name: Set up Python 3.14
         uses: actions/setup-python@v7
         with:
-          python-version: "3.10"
+          python-version: "3.14"
       - name: Install dependencies
         run: |
           cd backend
@@ -92,10 +93,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Set up Python 3.10
+      - name: Set up Python 3.14
         uses: actions/setup-python@v7
         with:
-          python-version: "3.10"
+          python-version: "3.14"
       - name: Validate Alembic migration safety
         run: |
           cd backend
@@ -112,10 +113,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Set up Python 3.10
+      - name: Set up Python 3.14
         uses: actions/setup-python@v7
         with:
-          python-version: "3.10"
+          python-version: "3.14"
       - name: Install security scanners
         run: |
           cd backend
@@ -125,7 +126,7 @@ jobs:
       - name: pip-audit (fail on unresolved vulns)
         run: |
           cd backend
-          timeout 300 pip-audit -r requirements.txt --progress-spinner off --ignore-vuln CVE-2024-23342
+          timeout 300 pip-audit -r requirements.txt --progress-spinner off
       - name: Bandit (high severity/high confidence)
         run: |
           cd backend

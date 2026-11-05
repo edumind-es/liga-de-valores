@@ -18,7 +18,7 @@
 
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
-from jose import JWTError, jwt
+import jwt
 from app.config import settings
 
 # Argon2 como esquema primario. pbkdf2_sha256 queda como deprecated para
@@ -93,5 +93,5 @@ def verify_token(token: str, expected_token_type: str | None = "access") -> dict
         if expected_token_type and token_type != expected_token_type:
             return None
         return payload
-    except JWTError:
+    except jwt.PyJWTError:
         return None
