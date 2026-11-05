@@ -87,7 +87,7 @@ export default function InstalarCentro() {
                 </div>
             )}
         >
-            <section className="grid gap-6 md:grid-cols-2">
+            <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
 
                 {/* Qué es */}
                 <Card variant="editorial" className="editorial-card md:col-span-2">
@@ -168,7 +168,7 @@ export default function InstalarCentro() {
                         <div>
                             <p className="font-semibold">Como archivo .zip</p>
                             <p className="mt-1 text-[var(--editorial-muted)]">
-                                Sin instalar git: descarga el código, descomprímelo donde quieras y sigue los mismos pasos. Para actualizar, vuelve a descargarlo.
+                                Sin instalar git: descarga el código, descomprímelo donde quieras y sigue los mismos pasos; la carpeta se llamará <code>liga-de-valores-main</code>. Para actualizar, vuelve a descargarlo.
                             </p>
                             <Button asChild variant="editorialOutline" size="sm" className="mt-2">
                                 <a href={ZIP_URL} target="_blank" rel="noopener noreferrer">
@@ -191,7 +191,7 @@ export default function InstalarCentro() {
                             Un solo comando en Linux y macOS; en Windows, tres pasos con Docker Desktop.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent className="grid gap-5 text-sm md:grid-cols-2">
+                    <CardContent className="grid grid-cols-1 gap-5 text-sm md:grid-cols-2">
                         <div>
                             <p className="mb-3 font-semibold text-[var(--editorial-ink)]">Linux / macOS</p>
                             <ol className="space-y-3">
