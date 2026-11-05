@@ -1,0 +1,13 @@
+# Contexto de construcción (docker/frontend/Dockerfile usa la raíz):
+# fuera todo lo que no hace falta para compilar.
+.git
+**/node_modules
+frontend/dist
+frontend/.cache
+backend/venv
+backend/.venv
+backend/static/uploads
+backend/static/submissions
+**/__pycache__
+*.log
+backups

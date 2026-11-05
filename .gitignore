@@ -57,6 +57,8 @@ run/
 # Deployment-local files
 *.service
 *.conf
+# El nginx del modo aula sí forma parte del repo (lo usa docker/frontend/Dockerfile)
+!frontend/nginx.aula.conf
 *.bak
 *.new
 

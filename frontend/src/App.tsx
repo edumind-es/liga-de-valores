@@ -70,6 +70,7 @@ const FAQ = lazy(() => import('./pages/FAQ'));
 const DidacticExample = lazy(() => import('./pages/DidacticExample'));
 const PartidoPublico = lazy(() => import('@/pages/Public/PartidoPublico'));
 const PwaGuide = lazy(() => import('./pages/PwaGuide'));
+const InstalarCentro = lazy(() => import('./pages/InstalarCentro'));
 
 function RouteFallback() {
   return <div className="min-h-screen flex items-center justify-center">Cargando...</div>;
@@ -415,6 +416,9 @@ function App() {
 
           {/* Guia PWA */}
           <Route path="/pwa" element={<PwaGuide />} />
+
+          {/* Versión descargable para centros (modo aula) */}
+          <Route path="/instalar-centro" element={<InstalarCentro />} />
 
           {/* Rutas Públicas */}
           <Route path="/wiki-juegos" element={<WikiJuegos />} />

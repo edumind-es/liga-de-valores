@@ -60,6 +60,7 @@ export default function PublicEditorialShell({
                         <NavLink to="/wiki-juegos">Wiki de juegos</NavLink>
                         <NavLink to="/repositorio-juegos">Repositorio</NavLink>
                         <NavLink to="/faq">Guia</NavLink>
+                        <NavLink to="/instalar-centro">Instalar en tu centro</NavLink>
                         <NavLink to="/pin">Acceso PIN</NavLink>
                     </nav>
                 </div>

@@ -268,6 +268,8 @@ export default function Login() {
                 {/* Enlace externo: /privacidad no existe como ruta interna (el resto de la app enlaza a edumind.es) */}
                 <a href="https://edumind.es/es/privacidad" target="_blank" rel="noopener noreferrer" className="hover:text-sub transition-colors">Privacidad</a>
                 <span className="mx-2">·</span>
+                <Link to="/instalar-centro" className="hover:text-sub transition-colors">Instalar en tu centro</Link>
+                <span className="mx-2">·</span>
                 <a href="mailto:contacto@edumind.es" className="hover:text-sub transition-colors">Contacto</a>
             </footer>
         </div>
