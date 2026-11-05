@@ -1,0 +1,132 @@
+# Liga EDUmind - MODO AULA
+# Despliegue autocontenido para un centro educativo: base de datos, Redis,
+# backend, worker de correo y frontend en un solo comando, sin servicios
+# externos. Los datos no salen del equipo donde se ejecuta (local-first).
+#
+#   1) Copia .env.example a .env y rellena POSTGRES_PASSWORD y
+#      SECRET_KEY (o ejecuta scripts/instalar_aula.sh, que lo hace todo).
+#   2) docker compose -f docker-compose.aula.yml up -d --build
+#   3) Abre http://localhost:8080 (o http://IP-del-equipo:8080 desde
+#      tablets y marcadores conectados a la misma red del centro).
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: liga-edumind-db-aula
+    environment:
+      - POSTGRES_DB=liga_edumind
+      - POSTGRES_USER=liga_edumind
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en el archivo .env}
+    volumes:
+      - postgres_data_aula:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U liga_edumind -d liga_edumind" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.4.6-alpine
+    container_name: liga-edumind-redis-aula
+    volumes:
+      - redis_data_aula:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../docker/backend/Dockerfile
+    container_name: liga-edumind-backend-aula
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://liga_edumind:${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en el archivo .env}@db:5432/liga_edumind
+      - SECRET_KEY=${SECRET_KEY:?Define SECRET_KEY en el archivo .env}
+      - DEBUG=False
+      - REDIS_URL=redis://redis:6379/0
+      - EMAIL_QUEUE_REDIS_URL=redis://redis:6379/2
+      # La app se sirve por HTTP dentro de la red del centro: sin esto,
+      # las cookies de sesión (Secure) no se guardarían y el login fallaría.
+      - AUTH_COOKIE_SECURE=false
+      # El limitador de peticiones protege instancias expuestas a internet;
+      # en la red del aula todas las tablets comparten la IP del proxy y
+      # se bloquearían entre sí.
+      - RATE_LIMIT_ENABLED=false
+      # Instancia de centro autoalojada: sin límite SaaS de ligas.
+      - FREE_PLAN_MAX_LEAGUES=${AULA_MAX_LIGAS:-100}
+      - FRONTEND_URL=http://localhost:${AULA_PORT:-8080}
+      # Correo saliente (opcional: sin estas variables la app funciona,
+      # pero no envía fichas por email)
+      - MAIL_SERVER=${MAIL_SERVER:-}
+      - MAIL_PORT=${MAIL_PORT:-587}
+      - MAIL_USERNAME=${MAIL_USERNAME:-}
+      - MAIL_PASSWORD=${MAIL_PASSWORD:-}
+      - MAIL_FROM=${MAIL_FROM:-}
+      - MAIL_FROM_NAME=${MAIL_FROM_NAME:-Liga EDUmind}
+    volumes:
+      - backend_uploads_aula:/app/static/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/api/ready', timeout=3).read()\"" ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    # Aplica las migraciones de base de datos y arranca el servidor
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8001 --workers 2"
+
+  # Worker de la cola de correo (arq). Sin configuración MAIL_* se queda
+  # a la espera sin consumir apenas recursos.
+  worker:
+    build:
+      context: ./backend
+      dockerfile: ../docker/backend/Dockerfile
+    container_name: liga-edumind-worker-aula
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://liga_edumind:${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en el archivo .env}@db:5432/liga_edumind
+      - SECRET_KEY=${SECRET_KEY:?Define SECRET_KEY en el archivo .env}
+      - DEBUG=False
+      - REDIS_URL=redis://redis:6379/0
+      - EMAIL_QUEUE_REDIS_URL=redis://redis:6379/2
+      - MAIL_SERVER=${MAIL_SERVER:-}
+      - MAIL_PORT=${MAIL_PORT:-587}
+      - MAIL_USERNAME=${MAIL_USERNAME:-}
+      - MAIL_PASSWORD=${MAIL_PASSWORD:-}
+      - MAIL_FROM=${MAIL_FROM:-}
+      - MAIL_FROM_NAME=${MAIL_FROM_NAME:-Liga EDUmind}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    command: arq app.workers.email_worker.WorkerSettings
+
+  web:
+    build:
+      # Contexto en la raíz: el build de Vite necesita CREDITS.md
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    container_name: liga-edumind-web-aula
+    ports:
+      # Accesible desde la red local del centro (tablets, marcadores…).
+      # Cambia el puerto con AULA_PORT en el .env si el 8080 está ocupado.
+      - "${AULA_PORT:-8080}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data_aula:
+  redis_data_aula:
+  backend_uploads_aula:

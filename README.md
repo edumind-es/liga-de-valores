@@ -19,6 +19,24 @@ Sitio: https://liga.edumind.es · Versión 3.0.1 · [CHANGELOG](CHANGELOG.md) ·
 
 En corto: el alumnado no tiene cuenta ni tabla; sin analítica; al abrir la app no se conecta con ningún tercero. El servidor guarda ligas, equipos, partidos, evaluaciones y fichas (sin nombre de alumno); el navegador guarda una copia offline y las preferencias de accesibilidad. Servicios opcionales del servidor: correo SMTP (fichas al docente), webhook de Discord (propuestas de deporte) y Nextcloud (copia de PDFs). Detalle completo, plazos y variables en [PRIVACY.md](PRIVACY.md).
 
+## Instalar en un centro educativo (modo aula)
+
+Para usar la liga en un centro sin depender de ningún servidor externo: un
+solo comando levanta base de datos, backend, worker de correo y frontend en
+cualquier equipo con [Docker](https://docs.docker.com/get-docker/), accesible
+desde las tablets y pantallas de la red del centro. Los datos del alumnado no
+salen de ese equipo.
+
+```bash
+git clone https://github.com/edumind-es/liga-edumind.git
+cd liga-edumind
+./scripts/instalar_aula.sh
+```
+
+El instalador genera credenciales locales, aplica las migraciones y ofrece
+crear el usuario administrador. Guía completa (Windows, copias de seguridad,
+actualizaciones, qué funciona sin internet): [docs/instalacion-aula.md](docs/instalacion-aula.md).
+
 ## Arrancar en local
 
 Frontend:
