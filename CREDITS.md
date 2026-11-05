@@ -62,7 +62,7 @@ Backend (pip):
 - Pillow — MIT-CMU
 - openpyxl — MIT
 - aiosmtplib, arq, redis — MIT
-- python-jose — MIT; passlib — BSD; argon2-cffi — MIT
+- PyJWT — MIT; passlib — BSD; argon2-cffi — MIT
 
 ## Servicios externos con los que se comunica
 

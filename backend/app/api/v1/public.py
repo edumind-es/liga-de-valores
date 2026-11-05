@@ -24,7 +24,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_
 from sqlalchemy.orm import selectinload
-from jose import jwt, JWTError
+import jwt
 from datetime import datetime, timezone
 from datetime import timedelta
 from pydantic import BaseModel, constr
@@ -55,7 +55,7 @@ async def get_public_token_payload(token: str = Depends(oauth2_scheme)):
                 headers={"WWW-Authenticate": "Bearer"},
             )
         return payload
-    except JWTError:
+    except jwt.PyJWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
