@@ -161,12 +161,14 @@ export default function Login() {
                                 </a>
                             )}
 
-                            {/* Separador */}
-                            <div className="relative flex items-center gap-3">
-                                <div className="h-px flex-1 bg-lme-border/50" />
-                                <span className="text-[0.7rem] uppercase tracking-widest text-sub">o con email / contraseña</span>
-                                <div className="h-px flex-1 bg-lme-border/50" />
-                            </div>
+                            {/* Separador: solo tiene sentido con el botón de Authentik encima */}
+                            {ssoEnabled && (
+                                <div className="relative flex items-center gap-3">
+                                    <div className="h-px flex-1 bg-lme-border/50" />
+                                    <span className="text-[0.7rem] uppercase tracking-widest text-sub">o con email / contraseña</span>
+                                    <div className="h-px flex-1 bg-lme-border/50" />
+                                </div>
+                            )}
 
                             {/* Formulario clásico */}
                             {showForm && (
