@@ -165,6 +165,20 @@ export default function FAQ() {
                         </details>
                         <details className="rounded-xl border border-[var(--editorial-border)] bg-[#f8fbff] p-4">
                             <summary className="cursor-pointer list-none font-semibold text-[var(--editorial-ink)]">
+                                ¿Puedo usarla en mi centro sin depender de este servidor?
+                            </summary>
+                            <p className="mt-3 leading-relaxed text-[var(--editorial-muted)]">
+                                Sí. Al ser software libre, puedes descargar la aplicación completa e instalarla en un equipo del centro (modo aula): los datos del alumnado no salen de ese equipo y, tras la instalación, funciona sin internet.
+                            </p>
+                            <Button asChild variant="editorialOutline" className="mt-3">
+                                <Link to="/instalar-centro">
+                                    <Download className="h-4 w-4" />
+                                    Descarga e instrucciones
+                                </Link>
+                            </Button>
+                        </details>
+                        <details className="rounded-xl border border-[var(--editorial-border)] bg-[#f8fbff] p-4">
+                            <summary className="cursor-pointer list-none font-semibold text-[var(--editorial-ink)]">
                                 Como propongo un deporte nuevo
                             </summary>
                             <p className="mt-3 leading-relaxed text-[var(--editorial-muted)]">

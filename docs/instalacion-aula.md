@@ -16,11 +16,16 @@ no salen de ese equipo.
 
 ## Instalación
 
+> **Sin git:** también puedes descargar el código como
+> [archivo .zip](https://github.com/edumind-es/liga-de-valores/archive/refs/heads/main.zip),
+> descomprimirlo y seguir los mismos pasos dentro de la carpeta resultante.
+> Con git, actualizar después es más cómodo (`git pull`).
+
 ### Linux / macOS
 
 ```bash
-git clone https://github.com/edumind-es/liga-edumind.git
-cd liga-edumind
+git clone https://github.com/edumind-es/liga-de-valores.git
+cd liga-de-valores
 ./scripts/instalar_aula.sh
 ```
 
@@ -34,8 +39,8 @@ El instalador:
 ### Windows (PowerShell, con Docker Desktop)
 
 ```powershell
-git clone https://github.com/edumind-es/liga-edumind.git
-cd liga-edumind
+git clone https://github.com/edumind-es/liga-de-valores.git
+cd liga-de-valores
 Copy-Item .env.example .env
 # Edita .env y rellena POSTGRES_PASSWORD y SECRET_KEY con valores largos y aleatorios
 docker compose -f docker-compose.aula.yml up -d --build

@@ -28,8 +28,8 @@ desde las tablets y pantallas de la red del centro. Los datos del alumnado no
 salen de ese equipo.
 
 ```bash
-git clone https://github.com/edumind-es/liga-edumind.git
-cd liga-edumind
+git clone https://github.com/edumind-es/liga-de-valores.git
+cd liga-de-valores
 ./scripts/instalar_aula.sh
 ```
 
