@@ -21,7 +21,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/authStore';
 import ErrorBoundary from './components/ErrorBoundary';
 import { OfflineProvider } from './components/offline';
-import { refreshAuthenticatedSession } from './api/client';
+import { isModoAula, refreshAuthenticatedSession } from './api/client';
 
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
@@ -142,7 +142,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/proponer-deporte" element={<SportProposalPage />} />
+          {/* Proponer deportes es exclusivo de liga.edumind.es */}
+          {!isModoAula() && <Route path="/proponer-deporte" element={<SportProposalPage />} />}
 
           {/* Express Scoreboard - Public Routes */}
           <Route path="/express">
@@ -188,16 +189,18 @@ function App() {
           <Route path="/ejemplo-didactico" element={<DidacticExample />} />
 
           {/* Admin Routes */}
-          <Route
-            path="/admin/proposals"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <AdminSportProposals />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
+          {!isModoAula() && (
+            <Route
+              path="/admin/proposals"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <AdminSportProposals />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+          )}
           <Route
             path="/admin/sports"
             element={

@@ -33,6 +33,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import { isModoAula } from '@/api/client';
 
 interface DomainLink {
     to: string;
@@ -76,7 +77,8 @@ export function Navbar() {
 
         const admin: DomainLink[] = user?.is_superuser
             ? [
-                { to: '/admin/proposals', label: t('nav.proposals'), shortLabel: t('nav.proposals', 'Propuestas'), icon: Shield },
+                // Propuestas de deporte: solo en liga.edumind.es
+                ...(isModoAula() ? [] : [{ to: '/admin/proposals', label: t('nav.proposals'), shortLabel: t('nav.proposals', 'Propuestas'), icon: Shield }]),
                 { to: '/admin/sports', label: t('nav.sports'), shortLabel: t('nav.sports', 'Deportes'), icon: Shield },
                 { to: '/admin/users', label: t('nav.users'), shortLabel: t('nav.users', 'Usuarios'), icon: Shield },
                 { to: '/admin/teams', label: t('nav.teams'), shortLabel: t('nav.teams', 'Equipos'), icon: Shield },

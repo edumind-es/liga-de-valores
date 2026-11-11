@@ -112,6 +112,13 @@ export function isAuthentikEnabled(): boolean {
     return import.meta.env.VITE_AUTHENTIK_ENABLED === 'true';
 }
 
+// Modo aula (instalación local en un centro): lo activa el build de
+// docker/frontend/Dockerfile. Oculta lo que solo tiene sentido en
+// liga.edumind.es, como proponer deportes al catálogo común de EDUmind.
+export function isModoAula(): boolean {
+    return import.meta.env.VITE_MODO_AULA === 'true';
+}
+
 export function getOidcStartUrl(nextPath: string = '/ligas'): string {
     const params = new URLSearchParams({ next: nextPath });
     return `${API_URL}/auth/oidc/start?${params.toString()}`;

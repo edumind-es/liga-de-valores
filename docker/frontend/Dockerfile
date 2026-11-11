@@ -16,6 +16,8 @@ RUN npm ci --no-audit --no-fund
 
 COPY CREDITS.md /app/CREDITS.md
 COPY frontend/ ./
+# Oculta lo exclusivo de liga.edumind.es (proponer deportes)
+ENV VITE_MODO_AULA=true
 RUN npm run build
 
 # Etapa 2: servidor estático
