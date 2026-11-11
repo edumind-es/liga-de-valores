@@ -91,6 +91,21 @@ jobs:
   migration-safety:
     needs: versioning
     runs-on: ubuntu-latest
+    # Base de datos vacía, como la de una instalación nueva del modo aula
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: liga_ci
+          POSTGRES_USER: liga_ci
+          POSTGRES_PASSWORD: liga_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U liga_ci -d liga_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v7
       - name: Set up Python 3.14
@@ -107,6 +122,14 @@ jobs:
           echo "${HEADS}"
           COUNT="$(echo "${HEADS}" | grep -c '(head)' || true)"
           test "${COUNT}" -eq 1
+      - name: Migraciones desde cero cubren los modelos
+        env:
+          DATABASE_URL: postgresql+asyncpg://liga_ci:liga_ci@localhost:5432/liga_ci
+          SECRET_KEY: ci-solo-para-migraciones-0123456789abcdef0123456789abcdef
+        run: |
+          cd backend
+          alembic upgrade head
+          python scripts/check_schema_models.py
 
   security-backend:
     needs: versioning
