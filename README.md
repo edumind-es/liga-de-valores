@@ -86,7 +86,7 @@ La integración continua (`.github/workflows/ci-cd.yml`) compila el frontend, co
 1. Copia una migración como `backend/alembic/versions/011_add_new_sports.py` con una revisión nueva (`revises` = la cabeza actual, `alembic heads`).
 2. Inserta en `tipos_deporte`: `nombre`, `codigo` (único, sin espacios), `tipo_marcador` (`goles`, `sets`, `puntos`, `tries` o `carreras`), `permite_empate`, `config` (JSON con las reglas del marcador: `puntos_para_ganar`, `sets_para_ganar`, `botones_puntuacion`, `tiempo_posesion_segundos`…), `icono`, `descripcion` y `categoria` (`alternativo`, `popular`, `tradicional`, `convencional`). Usa `ON CONFLICT (codigo) DO UPDATE` para que sea idempotente.
 3. `alembic upgrade head`. El frontend lee el catálogo de la API: no hay que tocarlo. Si el deporte necesita un marcador distinto a los cinco tipos existentes, el componente está en `frontend/src/pages/Partidos/`.
-4. Si prefieres no programar, propón el deporte desde `/proponer-deporte`.
+4. Si prefieres no programar, propón el deporte en [liga.edumind.es/proponer-deporte](https://liga.edumind.es/proponer-deporte). En el modo aula esa página no existe: las propuestas van al catálogo común de EDUmind.
 
 **Cambiar los criterios de valores o los mundos**
 

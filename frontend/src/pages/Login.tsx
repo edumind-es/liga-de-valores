@@ -14,7 +14,7 @@ import { useAuthStore } from '@/store/authStore';
 import { ChevronRight, GraduationCap, Hash, Key, Lock, ShieldCheck, Trophy, User, Zap } from 'lucide-react';
 import AccessibilityMenu from '@/components/accessibility/AccessibilityMenu';
 import { APP_BUILD_INFO } from '@/lib/appBuild';
-import { getOidcStartUrl, isAuthentikEnabled } from '@/api/client';
+import { getOidcStartUrl, isAuthentikEnabled, isModoAula } from '@/api/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -77,6 +77,11 @@ const QUICK_TILES: QuickTile[] = [
         toneText: 'text-vio',
     },
 ];
+
+// Proponer deportes solo tiene sentido en liga.edumind.es
+const VISIBLE_TILES = isModoAula()
+    ? QUICK_TILES.filter((tile) => tile.to !== '/proponer-deporte')
+    : QUICK_TILES;
 
 export default function Login() {
     const navigate = useNavigate();
@@ -232,7 +237,7 @@ export default function Login() {
                         <p className="text-[0.65rem] uppercase tracking-[0.16em] text-sub">Acceso directo · sin cuenta</p>
 
                         <div className="flex-1 grid grid-cols-2 gap-3 content-stretch">
-                            {QUICK_TILES.map((tile) => (
+                            {VISIBLE_TILES.map((tile, i) => (
                                 <Link
                                     key={tile.to}
                                     to={tile.to}
@@ -240,6 +245,8 @@ export default function Login() {
                                         'group relative flex h-full flex-col gap-3 overflow-hidden rounded-xl border border-t-2 bg-[rgba(30,27,22,0.74)] p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(10,9,7,0.28)]',
                                         tile.toneBorder,
                                         tile.toneTopBorder,
+                                        // Si queda una tarjeta sola en la última fila, ocupa las dos columnas
+                                        VISIBLE_TILES.length % 2 === 1 && i === VISIBLE_TILES.length - 1 && 'col-span-2',
                                     )}
                                 >
                                     {/* Glow de fondo */}
